@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Atelier Crédence — Digital Factory</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23E7E6EF'/%3E%3Crect x='5' y='5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3Crect x='17.5' y='5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='5' y='17.5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='17.5' y='17.5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3C/svg%3E">
+<style>
+:root{
+  /* ---- Charte Atelier Cyber-réflexes : blanc · gris froid · mauve · bleu ---- */
+  --bg:#FFFFFF; --wash:#F7F7FB; --card:#FFFFFF;
+  --border:#E7E6EF; --text:#1B1A2B; --muted:#5E5C74;
+  --mauve:#5B41B0; --mauve-dark:#4B349A; --mauve-soft:#F2EEFB;
+  --blue:#2C53AF; --blue-dark:#22417F; --blue-soft:#EAF0FB;
+  --grey-soft:#F2F2F6;
+  --ok:#238C60; --ok-soft:#E4F4EC;
+  --warn:#B7770C; --warn-soft:#F7EEDD;
+  --bad:#C0344B; --bad-soft:#FBE7EB;
+  --radius:16px; --radius-md:12px;
+  /* couleur PHYSIQUE du joint entre carreaux (rendu réaliste) — ne pas retoucher */
+  --joint:#B9B7AE;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html{touch-action:manipulation;}
+body{margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px; margin:0 auto; padding:16px 16px 96px;}
+
+/* focus visible accessible (WCAG) */
+:focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
+
+header{display:flex; align-items:center; gap:14px; padding:12px 0 20px;}
+.logo{display:grid; grid-template-columns:repeat(2,15px); gap:3px; background:var(--border); padding:3px; border-radius:5px;}
+.logo span{width:15px; height:15px; background:var(--mauve); display:block; border-radius:2px;}
+.logo span:nth-child(2),.logo span:nth-child(3){background:var(--card);}
+h1{font-size:22px; font-weight:800; margin:0; letter-spacing:-0.02em; color:var(--text);}
+h1 small{display:block; font-size:13px; font-weight:600; color:var(--muted); margin-top:2px;}
+
+.steps{display:flex; gap:3px; background:var(--border); padding:3px; border-radius:10px; margin-bottom:24px;}
+.steps div{flex:1; text-align:center; padding:10px 3px; font-size:12.5px; font-weight:600; background:var(--card); color:var(--muted); border-radius:7px;}
+.steps div.on{background:var(--mauve); color:#fff;}
+.steps div.done{background:var(--blue-soft); color:var(--blue-dark);}
+
+h2{font-size:21px; font-weight:800; letter-spacing:-0.01em; margin:0 0 5px; color:var(--text);}
+.aide{color:var(--muted); font-size:15px; margin:0 0 18px;}
+section{display:none;} section.on{display:block;}
+label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:var(--text);}
+section > label:first-of-type{margin-top:0;}
+input[type=text]{width:100%; padding:13px 14px; font-size:18px; border:1.5px solid var(--border);
+  border-radius:var(--radius-md); background:var(--card); color:var(--text);}
+input[type=text]:focus{outline:none; border-color:var(--mauve); box-shadow:0 0 0 3px var(--mauve-soft);}
+
+.toggle{display:flex; gap:3px; background:var(--border); padding:3px; border-radius:var(--radius-md);}
+.toggle button{flex:1; padding:12px 6px; font-size:15px; border:none; background:var(--card);
+  color:var(--muted); border-radius:8px; cursor:pointer; font-weight:600; line-height:1.25;}
+.toggle button.on{background:var(--mauve); color:#fff;}
+.toggle button small{display:block; font-weight:400; font-size:12px; opacity:.85;}
+
+.cartes{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.carte{border:1.5px solid var(--border); border-radius:var(--radius); background:var(--card);
+  padding:14px; cursor:pointer; text-align:left; transition:border-color .15s, background .15s;}
+.carte:hover{border-color:var(--muted);}
+.carte.on{border-color:var(--mauve); background:var(--mauve-soft);}
+.carte canvas{width:100%; max-width:100px; aspect-ratio:1; border-radius:8px; display:block; margin-bottom:10px;}
+.carte b{display:block; font-size:17px; margin-bottom:3px; color:var(--text);}
+.carte span{font-size:13.5px; color:var(--muted); line-height:1.35; display:block;}
+
+.banque{display:flex; gap:10px; flex-wrap:wrap;}
+.banque button{width:74px; height:74px; padding:0; border:2px solid var(--border);
+  border-radius:var(--radius-md); overflow:hidden; cursor:pointer; background:var(--card);}
+.banque button.on{border-color:var(--mauve); box-shadow:0 0 0 3px var(--mauve-soft);}
+.banque img{width:100%; height:100%; object-fit:cover; display:block;}
+
+canvas.zone{width:100%; border-radius:var(--radius-md); display:block; touch-action:none; background:var(--card); border:1px solid var(--border);}
+
+.grille{display:grid; grid-template-columns:1fr 1fr; background:var(--joint);
+  border-radius:var(--radius-md); overflow:hidden; aspect-ratio:1; width:100%;}
+.grille button{position:relative; border:none; padding:0; margin:0; cursor:pointer;
+  background:var(--card); display:flex; align-items:center; justify-content:center; min-height:60px;}
+.grille button canvas{width:100%; height:100%; display:block;}
+.grille .vide{color:#B7B4CC; font-size:14px; font-weight:600;}
+.grille .no{position:absolute; top:5px; left:7px; font-size:12px; font-weight:700;
+  color:var(--muted); background:rgba(255,255,255,.9); border-radius:5px; padding:0 4px;}
+.grille .rot{position:absolute; bottom:5px; right:7px; font-size:11px; font-weight:700;
+  color:var(--mauve-dark); background:rgba(255,255,255,.92); border-radius:5px; padding:1px 5px;}
+
+.rang{display:flex; align-items:center; gap:14px; margin:10px 0 4px;}
+.rang label{margin:0; white-space:nowrap;}
+input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
+.val{font-variant-numeric:tabular-nums; font-weight:700; min-width:52px; text-align:right; color:var(--text);}
+
+.badge{display:inline-block; padding:5px 13px; border-radius:999px; font-size:13px; font-weight:700; letter-spacing:.02em;}
+.badge.ok{background:var(--ok-soft); color:var(--ok);}
+.badge.warn{background:var(--warn-soft); color:var(--warn);}
+.badge.alerte{background:var(--bad-soft); color:var(--bad);}
+
+.actions{display:flex; gap:10px; margin:14px 0; flex-wrap:wrap;}
+.btn2{padding:12px 18px; font-size:15px; font-weight:600; border:1.5px solid var(--border);
+  background:var(--card); color:var(--text); border-radius:var(--radius-md); cursor:pointer; transition:border-color .15s, background .15s;}
+.btn2:hover{border-color:var(--muted); background:var(--wash);}
+
+.nav{position:fixed; left:0; right:0; bottom:0; background:var(--bg);
+  border-top:1px solid var(--border); padding:12px 16px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));}
+.nav .in{max-width:720px; margin:0 auto; display:flex; gap:12px;}
+.nav button{padding:15px 20px; font-size:17px; font-weight:700; border-radius:var(--radius-md); border:none; cursor:pointer;}
+#btnRetour{background:var(--wash); color:var(--text); border:1.5px solid var(--border);}
+#btnRetour:hover{border-color:var(--muted);}
+#btnSuite{flex:1; background:var(--mauve); color:#fff; transition:background .18s;}
+#btnSuite:hover:not(:disabled){background:var(--mauve-dark);}
+#btnSuite:disabled{background:var(--grey-soft); color:var(--muted); cursor:default;}
+
+.recap{background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+  padding:6px 16px; margin:16px 0; font-size:15px;}
+.recap div{display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); gap:12px;}
+.recap div:last-child{border:none;}
+.recap b{color:var(--text);}
+.recap span{color:var(--muted);}
+
+.dl{display:grid; gap:11px; margin:16px 0;}
+.dl button{display:flex; align-items:center; gap:14px; padding:15px; font-size:16px;
+  border:1px solid var(--border); border-radius:var(--radius); background:var(--card);
+  cursor:pointer; text-align:left; color:var(--text); width:100%; transition:border-color .15s, background .15s;}
+.dl button:hover{border-color:var(--muted); background:var(--wash);}
+.dl button b{display:block; font-weight:700;}
+.dl button small{color:var(--muted); font-size:13px;}
+.dl .num{width:38px; height:38px; border-radius:10px; background:var(--mauve-soft);
+  color:var(--mauve-dark); display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:17px; flex-shrink:0;}
+
+.pied{text-align:center; margin-top:30px;}
+.pied button{background:none; border:none; color:var(--muted); font-size:14px;
+  text-decoration:underline; cursor:pointer;}
+
+.modal{position:fixed; inset:0; background:rgba(27,26,43,.55); display:none;
+  align-items:flex-end; justify-content:center; z-index:50;}
+.modal.on{display:flex;}
+.modal .box{background:var(--bg); width:100%; max-width:720px; max-height:92vh;
+  overflow-y:auto; border-radius:var(--radius) var(--radius) 0 0; padding:20px 16px 30px;}
+.catgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:10px; margin:10px 0 4px;}
+.catitem{border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; background:var(--card);}
+.catitem img{width:100%; aspect-ratio:1; object-fit:cover; display:block;}
+.catitem .bas{display:flex; align-items:center; justify-content:space-between; padding:5px 7px; gap:4px;}
+.catitem .bas span{font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.catitem .bas button{border:none; background:none; color:var(--bad); font-size:17px; cursor:pointer; padding:0 3px;}
+
+.enc{background:var(--blue-soft); border-left:3px solid var(--blue); border-radius:var(--radius-md); padding:12px 15px; font-size:14px;
+  color:var(--blue-dark); margin:14px 0; display:flex; gap:11px; align-items:flex-start;}
+.enc .ic{flex:none; margin-top:1px; color:var(--blue);}
+.note{font-size:13px; color:var(--muted);}
+
+/* pictogrammes SVG (Lucide-style) — jamais d'emoji, cf. charte Cyber */
+.ic{width:1.15em; height:1.15em; display:inline-block; vertical-align:-.2em; flex:none;}
+.pied button .ic,.btn2 .ic{vertical-align:-.22em; margin-right:7px;}
+.modal .box h2 .ic{color:var(--mauve); margin-right:9px; vertical-align:-.18em;}
+.btn2.reset{color:var(--muted);}
+
+#planPose{display:none;}
+@media print{
+  body>*{display:none !important;}
+  #planPose{display:block !important; padding:8mm; font-family:-apple-system,sans-serif;}
+  #planPose h1{font-size:19pt; margin:0 0 1mm;}
+  #planPose .sous{color:#555; font-size:10pt; margin:0 0 6mm;}
+  #planPose img{width:85mm; display:block; margin:0 0 6mm; border:1px solid #bbb;}
+  #planPose ol{font-size:10.5pt; padding-left:5mm;}
+  #planPose li{margin-bottom:2mm;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><span></span><span></span><span></span><span></span></div>
+  <h1>Atelier Crédence<small>Digital Factory — parcours carreleurs</small></h1>
+</header>
+
+<div class="steps">
+  <div id="st0" class="on">1. Départ</div>
+  <div id="st1">2. Carreaux</div>
+  <div id="st2">3. Motif</div>
+  <div id="st3">4. Fichiers</div>
+</div>
+
+<section id="s0" class="on">
+  <h2>Ta crédence, de l'écran au carreau</h2>
+  <p class="aide">Tu vas composer une crédence de 4 carreaux. Elle sera imprimée sur de vrais carreaux, puis collée sur une plaque découpée au laser.</p>
+  <label for="prenom">Ton prénom</label>
+  <input type="text" id="prenom" placeholder="Ex. : Nadia" autocomplete="off">
+  <label>Comment veux-tu composer ?</label>
+  <div class="cartes">
+    <button class="carte" id="cModeF" onclick="setMode('fresque')">
+      <canvas id="miniF" width="120" height="120"></canvas>
+      <b>Fresque</b><span>Une seule image répartie sur les 4 carreaux</span>
+    </button>
+    <button class="carte" id="cModeA" onclick="setMode('azulejos')">
+      <canvas id="miniA" width="120" height="120"></canvas>
+      <b>Azulejos</b><span>Un motif par carreau, que tu tournes</span>
+    </button>
+  </div>
+</section>
+
+<section id="s1">
+  <h2>Choisis tes carreaux</h2>
+  <p class="aide">Deux décisions de carreleur. Regarde l'aperçu changer.</p>
+  <label>Format du carreau</label>
+  <div class="toggle">
+    <button id="t100" class="on" onclick="setTile(100)">10 × 10 cm<small>petit format</small></button>
+    <button id="t147" onclick="setTile(147)">14,7 × 14,7 cm<small>grand format</small></button>
+  </div>
+  <label>Largeur du joint</label>
+  <div class="rang">
+    <input type="range" id="joint" min="1" max="10" step="1" value="3">
+    <span class="val" id="jointVal">3 mm</span>
+  </div>
+  <p class="note">Joint fin : lignes discrètes, pose exigeante. Joint large : plus tolérant, plus graphique.</p>
+  <canvas class="zone" id="cvFormat" style="margin-top:14px"></canvas>
+  <div class="recap" id="recapFormat"></div>
+</section>
+
+<section id="s2">
+  <h2 id="titreCompo">Motif</h2>
+  <p class="aide" id="aideCompo"></p>
+
+  <div id="zoneFresque">
+    <label>Image</label>
+    <div class="banque" id="bqF"></div>
+    <label>Cadrage — fais glisser l'image. Les traits blancs montrent les joints.</label>
+    <canvas class="zone" id="cvCadrage"></canvas>
+    <div class="rang">
+      <label for="zoom">Zoom</label>
+      <input type="range" id="zoom" min="1" max="2" step="0.01" value="1">
+      <span class="badge ok" id="dpiBadge">—</span>
+    </div>
+  </div>
+
+  <div id="zoneAz">
+    <label>Motifs — choisis ton pinceau</label>
+    <div class="banque" id="bqA"></div>
+    <label>Touche un carreau pour appliquer le motif. Touche-le encore pour le faire pivoter.</label>
+    <div class="grille" id="grille">
+      <button type="button" onclick="tapCell(0)"></button>
+      <button type="button" onclick="tapCell(1)"></button>
+      <button type="button" onclick="tapCell(2)"></button>
+      <button type="button" onclick="tapCell(3)"></button>
+    </div>
+    <div class="actions">
+      <button class="btn2" onclick="azTout()">Tout remplir</button>
+      <button class="btn2" onclick="azRAZ()">Recommencer</button>
+    </div>
+  </div>
+
+  <label>Ta crédence, joints compris</label>
+  <canvas class="zone" id="cvVerif"></canvas>
+  <div class="recap" id="recap"></div>
+</section>
+
+<section id="s3">
+  <h2>Tes fichiers de fabrication</h2>
+  <p class="aide">Chaque fichier part vers une machine. Le plan de pose t'accompagne au collage.</p>
+  <div class="dl">
+    <button onclick="exportUV()"><span class="num">1</span><span><b>Impression UV</b><small>PDF — l'image découpée en 4, avec 2 mm de débord</small></span></button>
+    <button onclick="exportGabarit()"><span class="num">2</span><span><b>Gabarit de placement</b><small>PDF — même page, le tracé où poser les carreaux</small></span></button>
+    <button onclick="exportDecoupe()"><span class="num">3</span><span><b>Découpe laser</b><small>SVG — contour de la plaque support</small></span></button>
+    <button onclick="exportGravure()"><span class="num">4</span><span><b>Gravure laser</b><small>SVG — emplacements numérotés sur la plaque</small></span></button>
+    <button onclick="exportPlan()"><span class="num">5</span><span><b>Plan de pose</b><small>À imprimer — numérotation et ordre de collage</small></span></button>
+  </div>
+  <div class="enc"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Les deux PDF ont la même page. Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
+</section>
+
+<div class="pied"><button onclick="ouvreCat()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Catalogue d'images (formateur)</button></div>
+</div>
+
+<div class="modal" id="modalCat">
+  <div class="box">
+    <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Catalogue d'images</h2>
+    <p class="aide">Ajoute ici les images proposées aux stagiaires. Elles sont conservées sur cette tablette d'une session à l'autre.</p>
+    <label>Fresques — images à étaler sur les 4 carreaux</label>
+    <div class="catgrid" id="catF"></div>
+    <div class="actions">
+      <label class="btn2"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Ajouter une fresque<input type="file" accept="image/*" multiple style="display:none" onchange="ajout(this,'fresque')"></label>
+    </div>
+    <label>Azulejos — motifs carrés, un par carreau</label>
+    <div class="catgrid" id="catA"></div>
+    <div class="actions">
+      <label class="btn2"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Ajouter un motif<input type="file" accept="image/*" multiple style="display:none" onchange="ajout(this,'az')"></label>
+    </div>
+    <div class="actions" style="justify-content:space-between; margin-top:20px; border-top:1px solid var(--border); padding-top:16px">
+      <button class="btn2 reset" onclick="resetCatalogue()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Réinitialiser le catalogue</button>
+      <button class="btn2" onclick="fermeCat()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="in">
+    <button id="btnRetour" onclick="nav(-1)" style="display:none">Retour</button>
+    <button id="btnSuite" onclick="nav(1)" disabled>Continuer</button>
+  </div>
+</div>
+
+<div id="planPose"></div>
+
+<script>
+/* Catalogue par défaut : fichiers légers dans assets/ (plus de base64 dans la page) */
+const CATALOGUE_DEFAUT = {
+  "fresque":[{"nom":"Figue botanique","src":"assets/fresque/figue-botanique.jpg"}],
+  "az":[{"nom":"Azulejo bleu","src":"assets/azulejos/azulejo-bleu.png"}]
+};
+let CATALOGUE = {fresque:[], az:[]};
+
+/* Persistance : défauts masqués -> localStorage (léger) ; images ajoutées -> IndexedDB (gros) */
+const CLE_MASQUES='credence_masques_v1';
+function litMasques(){ try{return JSON.parse(localStorage.getItem(CLE_MASQUES))||{fresque:[],az:[]};}catch(e){return {fresque:[],az:[]};} }
+function ecritMasques(m){ try{localStorage.setItem(CLE_MASQUES,JSON.stringify(m));}catch(e){} }
+let _db=null;
+function db(){
+  if(_db) return Promise.resolve(_db);
+  return new Promise((res,rej)=>{
+    let r; try{ r=indexedDB.open('atelier-credence',1); }catch(e){ return rej(e); }
+    r.onupgradeneeded=()=>r.result.createObjectStore('ajouts',{keyPath:'id',autoIncrement:true});
+    r.onsuccess=()=>{ _db=r.result; res(_db); };
+    r.onerror=()=>rej(r.error);
+  });
+}
+function idbGetAll(){ return db().then(d=>new Promise((res,rej)=>{ const r=d.transaction('ajouts').objectStore('ajouts').getAll(); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); })).catch(()=>[]); }
+function idbAdd(rec){ return db().then(d=>new Promise((res,rej)=>{ const r=d.transaction('ajouts','readwrite').objectStore('ajouts').add(rec); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); })); }
+function idbDel(id){ return db().then(d=>new Promise((res,rej)=>{ const r=d.transaction('ajouts','readwrite').objectStore('ajouts').delete(id); r.onsuccess=()=>res(); r.onerror=()=>rej(r.error); })).catch(()=>{}); }
+function idbClear(){ return db().then(d=>new Promise((res,rej)=>{ const r=d.transaction('ajouts','readwrite').objectStore('ajouts').clear(); r.onsuccess=()=>res(); r.onerror=()=>rej(r.error); })).catch(()=>{}); }
+
+const DPI = 300;      // résolution d'export
+const BORDURE = 15;   // bordure de la plaque support (mm)
+const ECART = 10;     // écart entre carreaux sur le plateau (mm)
+const DEBORD = 2;     // débord d'impression autour de chaque carreau (mm)
+const MARGE = 5;      // marge de page du plateau (mm)
+
+const state = {step:0, prenom:'', mode:null, tile:100, joint:3,
+  f:{img:0, zoom:1, ox:.5, oy:.5},
+  az:[{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0}],
+  brush:0};
+const IMGS = {fresque:[], az:[]};
+
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const W = () => 2*state.tile + state.joint;
+const plaque = () => W() + 2*BORDURE;
+const pagePlateau = () => 2*state.tile + ECART + 2*MARGE;
+
+/* ---------- catalogue ---------- */
+function mk(src){ const i=new Image(); i.onload=()=>{majBanques(); majCat(); rendu();}; i.src=src; return i; }
+/* Construit le catalogue de travail : défauts (fichiers, hors masqués) + ajouts (IndexedDB). */
+async function charge(){
+  const masq=litMasques();
+  const ajouts=await idbGetAll();
+  ['fresque','az'].forEach(q=>{
+    const defs=(CATALOGUE_DEFAUT[q]||[])
+      .filter(d=>!masq[q].includes(d.nom))
+      .map(d=>({nom:d.nom, data:d.src, def:true}));
+    const add=ajouts.filter(a=>a.type===q).map(a=>({nom:a.nom, data:a.data, _id:a.id}));
+    CATALOGUE[q]=defs.concat(add);
+    IMGS[q]=CATALOGUE[q].map(o=>mk(o.data));
+  });
+  majBanques(); majCat(); rendu();
+}
+function reduire(dataUrl, maxSide){
+  return new Promise(res=>{
+    const im=new Image();
+    im.onload=()=>{
+      const s=Math.min(1, maxSide/Math.max(im.width,im.height));
+      const cv=document.createElement('canvas');
+      cv.width=Math.round(im.width*s); cv.height=Math.round(im.height*s);
+      const c=cv.getContext('2d');
+      c.fillStyle='#fff'; c.fillRect(0,0,cv.width,cv.height);
+      c.drawImage(im,0,0,cv.width,cv.height);
+      res(cv.toDataURL('image/jpeg',0.92));
+    };
+    im.src=dataUrl;
+  });
+}
+function ajout(input, quoi){
+  const fichiers=[...input.files]; input.value='';
+  fichiers.forEach(f=>{
+    const r=new FileReader();
+    r.onload=async e=>{
+      const d=await reduire(e.target.result, quoi==='fresque'?3600:1800);
+      const nom=f.name.replace(/\.[^.]+$/,'');
+      let id=null;
+      try{ id=await idbAdd({type:quoi, nom, data:d}); }
+      catch(err){ alert("Image non enregistrée (stockage saturé ?). Elle reste dispo pour cette session seulement."); }
+      CATALOGUE[quoi].push({nom, data:d, _id:id});
+      IMGS[quoi].push(mk(d));
+      majBanques(); majCat();
+    };
+    r.readAsDataURL(f);
+  });
+}
+function suppr(quoi,i){
+  const item=CATALOGUE[quoi][i];
+  if(item.def){ const m=litMasques(); if(!m[quoi].includes(item.nom)){ m[quoi].push(item.nom); ecritMasques(m); } }
+  else if(item._id!=null){ idbDel(item._id); }
+  CATALOGUE[quoi].splice(i,1); IMGS[quoi].splice(i,1);
+  if(quoi==='fresque' && state.f.img>=IMGS.fresque.length) state.f.img=0;
+  if(quoi==='az'){ state.brush=0;
+    state.az.forEach(c=>{ if(c.m===i) c.m=-1; else if(c.m>i) c.m--; }); }
+  majBanques(); majCat(); rendu();
+}
+/* Réinitialise le catalogue : efface les ajouts et rétablit les images par défaut. */
+async function resetCatalogue(){
+  if(!confirm('Réinitialiser le catalogue ?\n\nLes images ajoutées seront supprimées et les images par défaut rétablies.')) return;
+  await idbClear(); ecritMasques({fresque:[],az:[]});
+  state.f.img=0; state.brush=0;
+  await charge();
+}
+function majCat(){
+  [['fresque','catF'],['az','catA']].forEach(([q,id])=>{
+    const box=document.getElementById(id); box.innerHTML='';
+    CATALOGUE[q].forEach((o,i)=>{
+      const d=document.createElement('div'); d.className='catitem';
+      d.innerHTML='<img src="'+o.data+'" alt=""><div class="bas"><span>'+o.nom+'</span><button>&times;</button></div>';
+      d.querySelector('button').onclick=()=>suppr(q,i);
+      box.appendChild(d);
+    });
+  });
+}
+function ouvreCat(){ document.getElementById('modalCat').classList.add('on'); }
+function fermeCat(){ document.getElementById('modalCat').classList.remove('on'); }
+function majBanques(){
+  const bf=document.getElementById('bqF'); bf.innerHTML='';
+  CATALOGUE.fresque.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    if(i===state.f.img) b.className='on';
+    b.innerHTML='<img src="'+o.data+'" alt="">';
+    b.onclick=()=>{state.f.img=i; state.f.zoom=1; state.f.ox=.5; state.f.oy=.5;
+      document.getElementById('zoom').value=1; majBanques(); rendu();};
+    bf.appendChild(b);
+  });
+  const ba=document.getElementById('bqA'); ba.innerHTML='';
+  CATALOGUE.az.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    if(i===state.brush) b.className='on';
+    b.innerHTML='<img src="'+o.data+'" alt="">';
+    b.onclick=()=>{state.brush=i; majBanques();};
+    ba.appendChild(b);
+  });
+}
+
+/* ---------- géométrie ---------- */
+function cropRect(){
+  const img=IMGS.fresque[state.f.img];
+  if(!img||!img.width) return null;
+  const c=Math.min(img.width,img.height)/state.f.zoom;
+  const cx=clamp(state.f.ox*img.width, c/2, img.width-c/2);
+  const cy=clamp(state.f.oy*img.height, c/2, img.height-c/2);
+  return {x:cx-c/2, y:cy-c/2, w:c, h:c};
+}
+function effDpi(){ const c=cropRect(); return c ? c.w/W()*25.4 : 0; }
+function zoomMax(){
+  const img=IMGS.fresque[state.f.img];
+  if(!img||!img.width) return 2;
+  return clamp(Math.min(img.width,img.height)/W()*25.4/150, 1.01, 3);
+}
+
+/* un carreau, avec débord optionnel en mm sur les 4 côtés */
+function tuile(i, pxTile, bleedMm){
+  const b = bleedMm||0;
+  const total = state.tile + 2*b;
+  const px = Math.max(1, Math.round(pxTile * total / state.tile));
+  const cv=document.createElement('canvas'); cv.width=px; cv.height=px;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,px,px);
+  const r=i>>1, c=i&1;
+  if(state.mode==='fresque'){
+    const img=IMGS.fresque[state.f.img], cr=cropRect();
+    if(!cr) return cv;
+    const s=cr.w/W();
+    const sx=cr.x + (c*(state.tile+state.joint) - b)*s;
+    const sy=cr.y + (r*(state.tile+state.joint) - b)*s;
+    ctx.drawImage(img, sx, sy, total*s, total*s, 0, 0, px, px);
+  } else {
+    const cell=state.az[i];
+    if(cell.m<0) return cv;
+    const img=IMGS.az[cell.m];
+    if(!img||!img.width) return cv;
+    const m=Math.min(img.width,img.height);
+    ctx.save(); ctx.translate(px/2,px/2); ctx.rotate(cell.rot*Math.PI/2);
+    ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,-px/2,-px/2,px,px);
+    ctx.restore();
+  }
+  return cv;
+}
+function dessineCredence(cv, largPx){
+  const s=largPx/W();
+  cv.width=largPx; cv.height=largPx;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#B9B7AE'; ctx.fillRect(0,0,largPx,largPx);
+  const tp=Math.round(state.tile*s);
+  for(let i=0;i<4;i++){
+    const x=Math.round((i&1)*(state.tile+state.joint)*s);
+    const y=Math.round((i>>1)*(state.tile+state.joint)*s);
+    ctx.fillStyle='#fff'; ctx.fillRect(x,y,tp,tp);
+    if(state.mode==='azulejos' && state.az[i].m<0) continue;
+    ctx.drawImage(tuile(i,tp,0), x, y);
+  }
+}
+function larg(el){ return Math.min(680, (el.parentElement.clientWidth||640)-2); }
+
+/* ---------- grille azulejos : de vrais boutons ---------- */
+function tapCell(i){
+  const cell=state.az[i];
+  if(cell.m===state.brush) cell.rot=(cell.rot+1)%4;
+  else { cell.m=state.brush; cell.rot=0; }
+  rendu();
+}
+function azTout(){ state.az.forEach(c=>{ if(c.m<0){c.m=state.brush; c.rot=0;} }); rendu(); }
+function azRAZ(){ state.az=[{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0}]; rendu(); }
+function majGrille(){
+  const g=document.getElementById('grille');
+  g.style.gap=Math.max(2, Math.round(state.joint/state.tile*150))+'px';
+  [...g.children].forEach((b,i)=>{
+    const cell=state.az[i];
+    b.innerHTML='';
+    const n=document.createElement('span'); n.className='no'; n.textContent=i+1;
+    if(cell.m<0){
+      const v=document.createElement('span'); v.className='vide'; v.textContent='touche ici';
+      b.appendChild(v); b.appendChild(n);
+    } else {
+      b.appendChild(tuile(i,300,0));
+      b.appendChild(n);
+      if(cell.rot){
+        const r=document.createElement('span'); r.className='rot';
+        r.textContent=(cell.rot*90)+'\u00B0'; b.appendChild(r);
+      }
+    }
+  });
+}
+
+/* ---------- cadrage fresque ---------- */
+function dessineCadrage(){
+  const cv=document.getElementById('cvCadrage');
+  const img=IMGS.fresque[state.f.img];
+  if(!img||!img.width) return;
+  const lp=larg(cv), s=lp/img.width;
+  cv.width=lp; cv.height=Math.round(img.height*s);
+  const ctx=cv.getContext('2d');
+  ctx.drawImage(img,0,0,cv.width,cv.height);
+  const cr=cropRect(); if(!cr) return;
+  ctx.fillStyle='rgba(38,37,31,.55)';
+  ctx.fillRect(0,0,cv.width,cr.y*s);
+  ctx.fillRect(0,(cr.y+cr.h)*s,cv.width,cv.height);
+  ctx.fillRect(0,cr.y*s,cr.x*s,cr.h*s);
+  ctx.fillRect((cr.x+cr.w)*s,cr.y*s,cv.width,cr.h*s);
+  ctx.strokeStyle='#fff'; ctx.lineWidth=2.5;
+  ctx.strokeRect(cr.x*s,cr.y*s,cr.w*s,cr.h*s);
+  const pm=cr.w/W()*s;
+  ctx.lineWidth=Math.max(1.5, state.joint*pm);
+  ctx.strokeStyle='rgba(255,255,255,.9)';
+  const mid=(state.tile+state.joint/2)*pm;
+  ctx.beginPath();
+  ctx.moveTo(cr.x*s+mid, cr.y*s); ctx.lineTo(cr.x*s+mid, (cr.y+cr.h)*s);
+  ctx.moveTo(cr.x*s, cr.y*s+mid); ctx.lineTo((cr.x+cr.w)*s, cr.y*s+mid);
+  ctx.stroke();
+  const d=Math.round(effDpi());
+  const b=document.getElementById('dpiBadge');
+  b.textContent=d+' dpi';
+  b.className='badge '+(d>=250?'ok':(d>=110?'warn':'alerte'));
+  document.getElementById('zoom').max=zoomMax().toFixed(2);
+}
+let drag=null;
+const cvC=document.getElementById('cvCadrage');
+cvC.addEventListener('pointerdown',e=>{
+  drag={x:e.clientX,y:e.clientY,ox:state.f.ox,oy:state.f.oy};
+  if(cvC.setPointerCapture) cvC.setPointerCapture(e.pointerId);
+});
+cvC.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  const rect=cvC.getBoundingClientRect();
+  state.f.ox=clamp(drag.ox-(e.clientX-drag.x)/rect.width,0,1);
+  state.f.oy=clamp(drag.oy-(e.clientY-drag.y)/rect.height,0,1);
+  dessineCadrage();
+});
+cvC.addEventListener('pointerup',()=>{drag=null;});
+cvC.addEventListener('pointercancel',()=>{drag=null;});
+document.getElementById('zoom').addEventListener('input',e=>{
+  state.f.zoom=+e.target.value; dessineCadrage();
+});
+
+/* ---------- réglages ---------- */
+function setMode(m){
+  state.mode=m;
+  document.getElementById('cModeF').classList.toggle('on',m==='fresque');
+  document.getElementById('cModeA').classList.toggle('on',m==='azulejos');
+  majNav();
+}
+function setTile(t){
+  state.tile=t;
+  document.getElementById('t100').classList.toggle('on',t===100);
+  document.getElementById('t147').classList.toggle('on',t===147);
+  rendu();
+}
+document.getElementById('joint').addEventListener('input',e=>{
+  state.joint=+e.target.value;
+  document.getElementById('jointVal').textContent=state.joint+' mm';
+  rendu();
+});
+
+/* ---------- rendu ---------- */
+function rendu(){
+  minis();
+  if(state.step===1){
+    const cf=document.getElementById('cvFormat');
+    dessineCredence(cf, larg(cf));
+    document.getElementById('recapFormat').innerHTML=
+      '<div><span>Crédence finie</span><b>'+W()+' × '+W()+' mm</b></div>'
+      +'<div><span>Plaque support</span><b>'+plaque()+' × '+plaque()+' mm</b></div>'
+      +'<div><span>Plateau d\u2019impression</span><b>'+pagePlateau()+' × '+pagePlateau()+' mm</b></div>'
+      +'<div><span>Surface de joint</span><b>'+(Math.round((1-4*state.tile*state.tile/(W()*W()))*1000)/10)+' %</b></div>';
+  }
+  if(state.step===2){
+    const f=state.mode==='fresque';
+    document.getElementById('zoneFresque').style.display=f?'block':'none';
+    document.getElementById('zoneAz').style.display=f?'none':'block';
+    document.getElementById('titreCompo').textContent=f?'Compose ta fresque':'Compose tes azulejos';
+    document.getElementById('aideCompo').textContent=f
+      ?'Choisis une image, puis cadre la partie qui deviendra ta crédence.'
+      :'Choisis un motif, applique-le, fais-le pivoter. La composition naît des rotations.';
+    if(f) dessineCadrage(); else majGrille();
+    const cv=document.getElementById('cvVerif');
+    dessineCredence(cv, larg(cv));
+    let h='<div><span>Prénom</span><b>'+(state.prenom||'—')+'</b></div>'
+      +'<div><span>Carreaux</span><b>4 × '+(state.tile/10).toString().replace('.',',')+' cm</b></div>'
+      +'<div><span>Joint</span><b>'+state.joint+' mm</b></div>'
+      +'<div><span>Crédence finie</span><b>'+W()+' × '+W()+' mm</b></div>';
+    if(f){ const d=Math.round(effDpi());
+      h+='<div><span>Qualité d\u2019impression</span><b>'+d+' dpi — '
+        +(d>=250?'bonne':(d>=110?'correcte':'insuffisante'))+'</b></div>'; }
+    document.getElementById('recap').innerHTML=h;
+  }
+  majNav();
+}
+function minis(){
+  const t=54, j=4;
+  [['miniF',0],['miniA',1]].forEach(([id,md])=>{
+    const cv=document.getElementById(id), ctx=cv.getContext('2d');
+    ctx.fillStyle='#B9B7AE'; ctx.fillRect(0,0,120,120);
+    for(let i=0;i<4;i++){
+      const x=(i&1)*(t+j)+4, y=(i>>1)*(t+j)+4;
+      const img = md===0 ? IMGS.fresque[0] : IMGS.az[0];
+      if(!img||!img.width){ ctx.fillStyle='#fff'; ctx.fillRect(x,y,t,t); continue; }
+      const m=Math.min(img.width,img.height);
+      if(md===0){
+        ctx.drawImage(img,(img.width-m)/2+(i&1)*m/2,(img.height-m)/2+(i>>1)*m/2,m/2,m/2,x,y,t,t);
+      } else {
+        ctx.save(); ctx.translate(x+t/2,y+t/2); ctx.rotate((i%4)*Math.PI/2);
+        ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,-t/2,-t/2,t,t);
+        ctx.restore();
+      }
+    }
+  });
+}
+function majNav(){
+  const b=document.getElementById('btnSuite'), r=document.getElementById('btnRetour');
+  r.style.display=state.step>0?'block':'none';
+  b.style.display=state.step<3?'block':'none';
+  let ok=true;
+  if(state.step===0) ok=!!state.mode;
+  if(state.step===2) ok = state.mode==='fresque'
+    ? IMGS.fresque.length>0
+    : state.az.every(c=>c.m>=0);
+  b.disabled=!ok;
+  b.textContent=state.step===2?'Générer les fichiers':'Continuer';
+}
+function nav(s){
+  state.prenom=document.getElementById('prenom').value.trim();
+  state.step=clamp(state.step+s,0,3);
+  for(let i=0;i<4;i++){
+    document.getElementById('s'+i).classList.toggle('on',i===state.step);
+    const st=document.getElementById('st'+i);
+    st.className = i===state.step?'on':(i<state.step?'done':'');
+  }
+  rendu(); window.scrollTo(0,0);
+}
+
+/* ---------- exports ---------- */
+function slug(){
+  return (state.prenom||'stagiaire').toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_')
+    .replace(/^_|_$/g,'') || 'stagiaire';
+}
+function dl(url,nom){
+  const a=document.createElement('a'); a.href=url; a.download=nom;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),8000);
+}
+function dlSVG(s,nom){ dl(URL.createObjectURL(new Blob([s],{type:'image/svg+xml'})),nom); }
+
+/* --- écrivain PDF : vecteur + images JPEG, sans bibliothèque --- */
+const K = 72/25.4;
+function jpegBin(cv){
+  const b64=cv.toDataURL('image/jpeg',0.95).split(',')[1];
+  const bin=atob(b64), u=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+  return u;
+}
+function ecrisPDF(pageMm, content, images){
+  images = images||[];
+  const pW=pageMm*K;
+  const parts=[], off=[]; let pos=0;
+  const push=s=>{
+    if(typeof s==='string'){
+      const u=new Uint8Array(s.length);
+      for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i)&0xFF;
+      parts.push(u); pos+=u.length;
+    } else { parts.push(s); pos+=s.length; }
+  };
+  const nImg=images.length, nObj=5+nImg;
+  push('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  const obj=(n,body)=>{ off[n]=pos; push(n+' 0 obj\n'+body+'\nendobj\n'); };
+  obj(1,'<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+  let xo='';
+  for(let i=0;i<nImg;i++) xo+='/Im'+i+' '+(6+i)+' 0 R ';
+  obj(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pW.toFixed(3)+' '+pW.toFixed(3)+'] '
+    +'/Resources << /Font << /F1 5 0 R >> '+(nImg?'/XObject << '+xo+'>> ':'')+'>> /Contents 4 0 R >>');
+  obj(4,'<< /Length '+content.length+' >>\nstream\n'+content+'endstream');
+  obj(5,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+  for(let i=0;i<nImg;i++){
+    const im=images[i]; off[6+i]=pos;
+    push((6+i)+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+im.w+' /Height '+im.h
+      +' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+im.data.length+' >>\nstream\n');
+    push(im.data);
+    push('\nendstream\nendobj\n');
+  }
+  const xref=pos;
+  let x='xref\n0 '+(nObj+1)+'\n0000000000 65535 f \n';
+  for(let n=1;n<=nObj;n++) x+=String(off[n]).padStart(10,'0')+' 00000 n \n';
+  push(x);
+  push('trailer\n<< /Size '+(nObj+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n');
+  return new Blob(parts,{type:'application/pdf'});
+}
+function posPlateau(i){
+  return {x: MARGE + (i&1)*(state.tile+ECART),
+          y: MARGE + (i>>1)*(state.tile+ECART)};
+}
+function exportUV(){
+  const page=pagePlateau(), pW=page*K;
+  const total=state.tile+2*DEBORD;
+  const imgs=[];
+  for(let i=0;i<4;i++){
+    const cv=tuile(i, Math.round(state.tile/25.4*DPI), DEBORD);
+    imgs.push({data:jpegBin(cv), w:cv.width, h:cv.height});
+  }
+  let c='';
+  for(let i=0;i<4;i++){
+    const p=posPlateau(i);
+    const x=(p.x-DEBORD)*K;
+    const y=pW-(p.y-DEBORD)*K-total*K;
+    c+='q '+(total*K).toFixed(3)+' 0 0 '+(total*K).toFixed(3)+' '
+      +x.toFixed(3)+' '+y.toFixed(3)+' cm /Im'+i+' Do Q\n';
+  }
+  dl(URL.createObjectURL(ecrisPDF(page, c, imgs)), slug()+'_impression_uv.pdf');
+}
+
+const SEG={a:[[0,0],[6,0]],b:[[6,0],[6,5]],c:[[6,5],[6,10]],d:[[0,10],[6,10]],
+  e:[[0,5],[0,10]],f:[[0,0],[0,5]],g:[[0,5],[6,5]]};
+const DG={1:'bc', 2:'abged', 3:'abgcd', 4:'fgbc'};
+
+function exportGabarit(){
+  const page=pagePlateau(), pW=page*K, t=state.tile;
+  const Y = mm => pW - mm*K;
+  let c='0 G 0.8 w\n';
+  for(let i=0;i<4;i++){
+    const p=posPlateau(i);
+    c+=(p.x*K).toFixed(2)+' '+Y(p.y+t).toFixed(2)+' '
+      +(t*K).toFixed(2)+' '+(t*K).toFixed(2)+' re S\n';
+    c+='[3 3] 0 d 0.4 w\n'
+      +((p.x-DEBORD)*K).toFixed(2)+' '+Y(p.y+t+DEBORD).toFixed(2)+' '
+      +((t+2*DEBORD)*K).toFixed(2)+' '+((t+2*DEBORD)*K).toFixed(2)+' re S\n'
+      +'[] 0 d 0.8 w\n';
+    const ox=p.x+t/2-3, oy=p.y+t/2-5;
+    for(const k of DG[i+1]){
+      const seg=SEG[k];
+      c+=((ox+seg[0][0])*K).toFixed(2)+' '+Y(oy+seg[0][1]).toFixed(2)+' m '
+        +((ox+seg[1][0])*K).toFixed(2)+' '+Y(oy+seg[1][1]).toFixed(2)+' l S\n';
+    }
+  }
+  c+='1.2 w 0 '+Y(0).toFixed(2)+' m '+(16*K).toFixed(2)+' '+Y(0).toFixed(2)+' l S\n'
+    +'0 '+Y(0).toFixed(2)+' m 0 '+Y(16).toFixed(2)+' l S\n';
+  c+='BT /F1 7 Tf '+(20*K).toFixed(2)+' '+Y(8).toFixed(2)+' Td (origine machine) Tj ET\n';
+  c+='BT /F1 6 Tf '+(MARGE*K).toFixed(2)+' '+Y(page-2).toFixed(2)+' Td '
+    +'(carreau '+t+' mm - ecart '+ECART+' mm - debord '+DEBORD+' mm - trait plein = carreau) Tj ET\n';
+  dl(URL.createObjectURL(ecrisPDF(page, c, [])), 'gabarit_placement_'+t+'mm.pdf');
+}
+
+function chiffreSVG(n,x,y,col){
+  let s='';
+  for(const k of DG[n]){
+    const seg=SEG[k];
+    s+='<line x1="'+(x+seg[0][0])+'" y1="'+(y+seg[0][1])+'" x2="'+(x+seg[1][0])
+      +'" y2="'+(y+seg[1][1])+'" stroke="'+col+'" stroke-width="0.8" stroke-linecap="round"/>';
+  }
+  return s;
+}
+function exportDecoupe(){
+  const p=plaque();
+  const s='<svg xmlns="http://www.w3.org/2000/svg" width="'+p+'mm" height="'+p+'mm" viewBox="0 0 '+p+' '+p+'">'
+    +'<rect x="0.1" y="0.1" width="'+(p-0.2)+'" height="'+(p-0.2)+'" rx="3" fill="none" stroke="#FF0000" stroke-width="0.2"/></svg>';
+  dlSVG(s, slug()+'_decoupe_plaque.svg');
+}
+function exportGravure(){
+  const p=plaque(), t=state.tile, pas=t+state.joint;
+  let s='<svg xmlns="http://www.w3.org/2000/svg" width="'+p+'mm" height="'+p+'mm" viewBox="0 0 '+p+' '+p+'">';
+  for(let i=0;i<4;i++){
+    const x=BORDURE+(i&1)*pas, y=BORDURE+(i>>1)*pas;
+    s+='<rect x="'+x+'" y="'+y+'" width="'+t+'" height="'+t+'" fill="none" stroke="#000000" stroke-width="0.3"/>';
+    s+=chiffreSVG(i+1, x+t/2-3, y+t/2-5, '#000000');
+    s+='<polygon points="'+(x+t/2-3)+','+(y+11)+' '+(x+t/2+3)+','+(y+11)+' '+(x+t/2)+','+(y+5)+'" fill="#000000"/>';
+  }
+  s+='</svg>';
+  dlSVG(s, slug()+'_gravure_plaque.svg');
+}
+function exportPlan(){
+  const cv=document.createElement('canvas');
+  dessineCredence(cv, 900);
+  document.getElementById('planPose').innerHTML=
+    '<h1>Plan de pose — '+(state.prenom||'')+'</h1>'
+    +'<p class="sous">Atelier Crédence — Digital Factory — '+new Date().toLocaleDateString('fr-BE')
+    +' — '+(state.mode==='fresque'?'Fresque':'Azulejos')
+    +' — carreaux '+(state.tile/10).toString().replace('.',',')+' cm, joint '+state.joint+' mm'
+    +' — crédence '+W()+' × '+W()+' mm</p>'
+    +'<img src="'+cv.toDataURL('image/jpeg',.85)+'">'
+    +'<ol><li>Pose le gabarit sur la table de l\u2019imprimante, coin repère sur l\u2019origine machine.</li>'
+    +'<li>Place les 4 carreaux dans les carrés en trait plein, puis imprime le PDF d\u2019impression UV.</li>'
+    +'<li>À la sortie, écris au dos de chaque carreau son numéro et une flèche vers le HAUT.</li>'
+    +'<li>Encolle la plaque. Place chaque carreau dans sa case gravée, flèche vers le haut.</li>'
+    +'<li>Le carreau doit rester à l\u2019intérieur du trait. S\u2019il déborde, il est mal placé.</li>'
+    +'<li>Laisse les '+state.joint+' mm vides entre les carreaux : ce sont les joints.</li></ol>';
+  setTimeout(()=>window.print(),150);
+}
+
+window.addEventListener('resize',rendu);
+document.getElementById('prenom').addEventListener('input',majNav);
+rendu(); charge();
+</script>
+</body>
+</html>
