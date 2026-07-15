@@ -17,8 +17,8 @@
   --warn:#B7770C; --warn-soft:#F7EEDD;
   --bad:#C0344B; --bad-soft:#FBE7EB;
   --radius:16px; --radius-md:12px;
-  /* couleur PHYSIQUE du joint entre carreaux (rendu réaliste) — ne pas retoucher */
-  --joint:#B9B7AE;
+  /* couleur du joint entre carreaux dans l'aperçu (source unique, relue en JS) */
+  --joint:#1B1A2B;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 html{touch-action:manipulation;}
@@ -363,6 +363,8 @@ const state = {step:0, prenom:'', mode:null, tile:100, joint:3,
   az:[{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0}],
   brush:0};
 const IMGS = {fresque:[], az:[]};
+/* couleur du joint : relue depuis la variable CSS --joint (source unique) */
+const JOINT = getComputedStyle(document.documentElement).getPropertyValue('--joint').trim() || '#1B1A2B';
 
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const W = () => 2*state.tile + state.joint;
@@ -517,7 +519,7 @@ function dessineCredence(cv, largPx){
   const s=largPx/W();
   cv.width=largPx; cv.height=largPx;
   const ctx=cv.getContext('2d');
-  ctx.fillStyle='#B9B7AE'; ctx.fillRect(0,0,largPx,largPx);
+  ctx.fillStyle=JOINT; ctx.fillRect(0,0,largPx,largPx);
   const tp=Math.round(state.tile*s);
   for(let i=0;i<4;i++){
     const x=Math.round((i&1)*(state.tile+state.joint)*s);
@@ -666,7 +668,7 @@ function minis(){
   const t=54, j=4;
   [['miniF',0],['miniA',1]].forEach(([id,md])=>{
     const cv=document.getElementById(id), ctx=cv.getContext('2d');
-    ctx.fillStyle='#B9B7AE'; ctx.fillRect(0,0,120,120);
+    ctx.fillStyle=JOINT; ctx.fillRect(0,0,120,120);
     for(let i=0;i<4;i++){
       const x=(i&1)*(t+j)+4, y=(i>>1)*(t+j)+4;
       const img = md===0 ? IMGS.fresque[0] : IMGS.az[0];
