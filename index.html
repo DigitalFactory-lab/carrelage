@@ -219,7 +219,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     </button>
     <button class="carte" id="cModeA" onclick="setMode('azulejos')">
       <canvas id="miniA" width="120" height="120"></canvas>
-      <b>Azulejos</b><span>Un motif par carreau, que tu tournes</span>
+      <b>Mosaïque</b><span>Un motif par carreau, que tu tournes</span>
     </button>
   </div>
 </section>
@@ -304,7 +304,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <div class="actions">
       <label class="btn2"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Ajouter une fresque<input type="file" accept="image/*" multiple style="display:none" onchange="ajout(this,'fresque')"></label>
     </div>
-    <label>Azulejos — motifs carrés, un par carreau</label>
+    <label>Mosaïque — motifs carrés, un par carreau</label>
     <div class="catgrid" id="catA"></div>
     <div class="actions">
       <label class="btn2"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Ajouter un motif<input type="file" accept="image/*" multiple style="display:none" onchange="ajout(this,'az')"></label>
@@ -644,7 +644,7 @@ function rendu(){
     const f=state.mode==='fresque';
     document.getElementById('zoneFresque').style.display=f?'block':'none';
     document.getElementById('zoneAz').style.display=f?'none':'block';
-    document.getElementById('titreCompo').textContent=f?'Compose ta fresque':'Compose tes azulejos';
+    document.getElementById('titreCompo').textContent=f?'Compose ta fresque':'Compose ta mosaïque';
     document.getElementById('aideCompo').textContent=f
       ?'Choisis une image, puis cadre la partie qui deviendra ta crédence.'
       :'Choisis un motif, applique-le, fais-le pivoter. La composition naît des rotations.';
@@ -849,7 +849,7 @@ function exportPlan(){
   document.getElementById('planPose').innerHTML=
     '<h1>Plan de pose — '+(state.prenom||'')+'</h1>'
     +'<p class="sous">Atelier Crédence — Digital Factory — '+new Date().toLocaleDateString('fr-BE')
-    +' — '+(state.mode==='fresque'?'Fresque':'Azulejos')
+    +' — '+(state.mode==='fresque'?'Fresque':'Mosaïque')
     +' — carreaux '+(state.tile/10).toString().replace('.',',')+' cm, joint '+state.joint+' mm'
     +' — crédence '+W()+' × '+W()+' mm</p>'
     +'<img src="'+cv.toDataURL('image/jpeg',.85)+'">'
