@@ -163,6 +163,23 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .enc .ic{flex:none; margin-top:1px; color:var(--blue);}
 .note{font-size:13px; color:var(--muted);}
 
+/* ---- Plan de pose à l'écran : page dans le design du site, identité fuchsia, à cocher ---- */
+.plan-titre{display:flex; align-items:center; gap:10px; font-size:21px; font-weight:800; letter-spacing:-0.01em; margin:0 0 6px; color:var(--text);}
+.modal .box h2.plan-titre .ic{color:var(--fuchsia); width:24px; height:24px;}
+.plan-sous{color:var(--muted); font-size:14px; margin:0 0 16px; padding-bottom:12px; border-bottom:1.5px solid var(--fuchsia);}
+.plan-img{width:100%; max-width:300px; border-radius:var(--radius-md); border:1px solid var(--border); display:block; margin:0 0 16px;}
+.plan-hint{font-size:14px; color:var(--muted); margin:0 0 12px;}
+.plan-check{display:grid; gap:10px;}
+.pc{display:flex; gap:13px; align-items:flex-start; padding:14px 16px; border:1px solid var(--border);
+  border-radius:var(--radius-md); cursor:pointer; background:var(--card); transition:background .15s, border-color .15s;}
+.pc:hover{border-color:var(--muted);}
+.pc input{margin:0; width:22px; height:22px; flex:none; accent-color:var(--fuchsia); cursor:pointer;}
+.pc-n{font-weight:800; color:var(--fuchsia); flex:none; min-width:1.1em; font-variant-numeric:tabular-nums;}
+.pc-txt{flex:1; font-size:15px;}
+.pc:has(input:checked){background:var(--wash);}
+.pc:has(input:checked) .pc-txt{color:var(--muted); text-decoration:line-through;}
+.pc:has(input:checked) .pc-n{color:var(--muted);}
+
 /* pictogrammes SVG (Lucide-style) — jamais d'emoji, cf. charte Cyber */
 .ic{width:1.15em; height:1.15em; display:inline-block; vertical-align:-.2em; flex:none;}
 .pied button .ic,.btn2 .ic{vertical-align:-.22em; margin-right:7px;}
@@ -288,7 +305,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <button onclick="exportUV()"><span class="num">1</span><span><b>Impression UV</b><small>PDF — l'image découpée en 4, avec 2 mm de débord</small></span></button>
     <button onclick="exportGabarit()"><span class="num">2</span><span><b>Gabarit de placement</b><small>PDF — même page, le tracé où poser les carreaux</small></span></button>
     <button onclick="exportLaser()"><span class="num">3</span><span><b>Découpe + gravure laser</b><small>SVG — contour (rouge = découpe) et emplacements numérotés (noir = gravure)</small></span></button>
-    <button onclick="exportPlan()"><span class="num">4</span><span><b>Plan de pose</b><small>À imprimer — numérotation et ordre de collage</small></span></button>
+    <button onclick="ouvrePlan()"><span class="num">4</span><span><b>Plan de pose</b><small>À suivre sur la tablette pendant la pose — étapes à cocher (imprimable)</small></span></button>
   </div>
   <div class="enc"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Les deux PDF ont la même page. Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
 </section>
@@ -313,6 +330,16 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <div class="actions" style="justify-content:space-between; margin-top:20px; border-top:1px solid var(--border); padding-top:16px">
       <button class="btn2 reset" onclick="resetCatalogue()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Réinitialiser le catalogue</button>
       <button class="btn2" onclick="fermeCat()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalPlan">
+  <div class="box">
+    <div id="planEcran"></div>
+    <div class="actions" style="justify-content:space-between; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
+      <button class="btn2" onclick="imprimePlan()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimer</button>
+      <button class="btn2" onclick="fermePlan()">Fermer</button>
     </div>
   </div>
 </div>
@@ -845,22 +872,45 @@ function exportLaser(){
   s+='</svg>';
   dlSVG(s, slug()+'_laser_plaque.svg');
 }
-function exportPlan(){
-  const cv=document.createElement('canvas');
-  dessineCredence(cv, 900);
+/* Étapes du plan de pose — partagées par la page écran et la version imprimable */
+function etapesPose(){
+  return [
+    'Imprime ce gabarit directement sur le plateau de l’imprimante : il trace l’emplacement des 4 carreaux et l’origine machine. Règle la bonne hauteur de table avant d’imprimer.',
+    'Place les 4 carreaux dans les carrés en trait plein, puis imprime le PDF d’impression UV par-dessus. Revérifie la hauteur de table avant chaque impression.',
+    'À la sortie, écris au dos de chaque carreau son numéro et une flèche vers le HAUT.',
+    'Encolle la plaque. Place chaque carreau dans sa case gravée, flèche vers le haut.',
+    'Le carreau doit rester à l’intérieur du trait. S’il déborde, il est mal placé.',
+    'Laisse les '+state.joint+' mm vides entre les carreaux : ce sont les joints.'
+  ];
+}
+function sousTitrePose(){
+  return (state.mode==='fresque'?'Fresque':'Mosaïque')
+    +' · carreaux '+(state.tile/10).toString().replace('.',',')+' cm · joint '+state.joint+' mm'
+    +' · crédence '+W()+' × '+W()+' mm';
+}
+/* Plan de pose à l'écran : page dans le design du site, à cocher pendant la production */
+function ouvrePlan(){
+  const cv=document.createElement('canvas'); dessineCredence(cv, 900);
+  const check=etapesPose().map((t,i)=>
+    '<label class="pc"><input type="checkbox"><span class="pc-n">'+(i+1)+'</span><span class="pc-txt">'+t+'</span></label>').join('');
+  document.getElementById('planEcran').innerHTML=
+    '<h2 class="plan-titre"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Plan de pose'+(state.prenom?' — '+state.prenom:'')+'</h2>'
+    +'<p class="plan-sous">'+sousTitrePose()+'</p>'
+    +'<img class="plan-img" src="'+cv.toDataURL('image/jpeg',.85)+'" alt="Aperçu de la crédence">'
+    +'<p class="plan-hint">Coche chaque étape au fur et à mesure de la production.</p>'
+    +'<div class="plan-check">'+check+'</div>';
+  const box=document.querySelector('#modalPlan .box'); if(box) box.scrollTop=0;
+  document.getElementById('modalPlan').classList.add('on');
+}
+function fermePlan(){ document.getElementById('modalPlan').classList.remove('on'); }
+/* Version imprimable (facultative) : mise en page A4 via @media print */
+function imprimePlan(){
+  const cv=document.createElement('canvas'); dessineCredence(cv, 900);
   document.getElementById('planPose').innerHTML=
-    '<h1>Plan de pose — '+(state.prenom||'')+'</h1>'
-    +'<p class="sous">Atelier Crédence — Digital Factory — '+new Date().toLocaleDateString('fr-BE')
-    +' — '+(state.mode==='fresque'?'Fresque':'Mosaïque')
-    +' — carreaux '+(state.tile/10).toString().replace('.',',')+' cm, joint '+state.joint+' mm'
-    +' — crédence '+W()+' × '+W()+' mm</p>'
+    '<h1>Plan de pose'+(state.prenom?' — '+state.prenom:'')+'</h1>'
+    +'<p class="sous">Atelier Crédence — Digital Factory — '+new Date().toLocaleDateString('fr-BE')+' — '+sousTitrePose()+'</p>'
     +'<img src="'+cv.toDataURL('image/jpeg',.85)+'">'
-    +'<ol><li>Imprime ce gabarit directement sur le plateau de l\u2019imprimante : il trace l\u2019emplacement des 4 carreaux et l\u2019origine machine. R\u00e8gle la bonne hauteur de table avant d\u2019imprimer.</li>'
-    +'<li>Place les 4 carreaux dans les carrés en trait plein, puis imprime le PDF d\u2019impression UV par-dessus. Revérifie la hauteur de table avant chaque impression.</li>'
-    +'<li>À la sortie, écris au dos de chaque carreau son numéro et une flèche vers le HAUT.</li>'
-    +'<li>Encolle la plaque. Place chaque carreau dans sa case gravée, flèche vers le haut.</li>'
-    +'<li>Le carreau doit rester à l\u2019intérieur du trait. S\u2019il déborde, il est mal placé.</li>'
-    +'<li>Laisse les '+state.joint+' mm vides entre les carreaux : ce sont les joints.</li></ol>';
+    +'<ol>'+etapesPose().map(t=>'<li>'+t+'</li>').join('')+'</ol>';
   setTimeout(()=>window.print(),150);
 }
 
