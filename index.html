@@ -33,6 +33,13 @@ body{margin:0; background:var(--bg); color:var(--text);
   font-family:var(--font);
   font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;}
 .wrap{max-width:720px; margin:0 auto; padding:16px 16px 96px;}
+/* ---- Large écrans : deux colonnes (réglages à gauche, aperçu en direct à
+   droite) au lieu d'étirer une seule colonne dans un océan de vide. ---- */
+@media (min-width:900px){
+  .wrap{max-width:1120px; padding:24px 32px 96px;}
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start;}
+  .col-right{position:sticky; top:20px;}
+}
 
 /* focus visible accessible (WCAG) */
 :focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
@@ -123,6 +130,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
   border-top:1px solid var(--border); padding:12px 16px;
   padding-bottom:calc(12px + env(safe-area-inset-bottom));}
 .nav .in{max-width:720px; margin:0 auto; display:flex; gap:12px;}
+@media (min-width:900px){ .nav .in{max-width:1120px;} }
 .nav button{padding:15px 20px; font-size:17px; font-weight:700; border-radius:var(--radius-md); border:none; cursor:pointer;}
 #btnRetour{background:var(--wash); color:var(--text); border:1.5px solid var(--border);}
 #btnRetour:hover{border-color:var(--muted);}
@@ -138,6 +146,10 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .recap span{color:var(--muted);}
 
 .dl{display:grid; gap:11px; margin:16px 0;}
+@media (min-width:900px){
+  .dl{grid-template-columns:1fr 1fr;}
+  .dl button:last-child:nth-child(odd){grid-column:1 / -1;}
+}
 .dl button{display:flex; align-items:center; gap:14px; padding:15px; font-size:16px;
   border:1px solid var(--border); border-radius:var(--radius); background:var(--card);
   cursor:pointer; text-align:left; color:var(--text); width:100%; transition:border-color .15s, background .15s;}
@@ -267,56 +279,67 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 <section id="s1">
   <h2>Choisis tes carreaux</h2>
   <p class="aide">Deux décisions de carreleur. Regarde l'aperçu changer.</p>
-  <label>Format du carreau</label>
-  <div class="toggle">
-    <button id="t100" class="on" onclick="setTile(100)">10 × 10 cm<small>petit format</small></button>
-    <button id="t147" onclick="setTile(147)">14,7 × 14,7 cm<small>grand format</small></button>
+  <div class="split">
+    <div class="col-left">
+      <label>Format du carreau</label>
+      <div class="toggle">
+        <button id="t100" class="on" onclick="setTile(100)">10 × 10 cm<small>petit format</small></button>
+        <button id="t147" onclick="setTile(147)">14,7 × 14,7 cm<small>grand format</small></button>
+      </div>
+      <label>Largeur du joint</label>
+      <div class="rang">
+        <input type="range" id="joint" min="1" max="10" step="1" value="3">
+        <span class="val" id="jointVal">3 mm</span>
+      </div>
+      <p class="note">Joint fin : lignes discrètes, pose exigeante. Joint large : plus tolérant, plus graphique.</p>
+    </div>
+    <div class="col-right">
+      <canvas class="zone" id="cvFormat" style="margin-top:14px"></canvas>
+      <div class="recap" id="recapFormat"></div>
+    </div>
   </div>
-  <label>Largeur du joint</label>
-  <div class="rang">
-    <input type="range" id="joint" min="1" max="10" step="1" value="3">
-    <span class="val" id="jointVal">3 mm</span>
-  </div>
-  <p class="note">Joint fin : lignes discrètes, pose exigeante. Joint large : plus tolérant, plus graphique.</p>
-  <canvas class="zone" id="cvFormat" style="margin-top:14px"></canvas>
-  <div class="recap" id="recapFormat"></div>
 </section>
 
 <section id="s2">
   <h2 id="titreCompo">Motif</h2>
   <p class="aide" id="aideCompo"></p>
 
-  <div id="zoneFresque">
-    <label>Image</label>
-    <div class="banque" id="bqF"></div>
-    <label>Cadrage — fais glisser l'image. Les traits blancs montrent les joints.</label>
-    <canvas class="zone" id="cvCadrage"></canvas>
-    <div class="rang">
-      <label for="zoom">Zoom</label>
-      <input type="range" id="zoom" min="1" max="2" step="0.01" value="1">
-      <span class="badge ok" id="dpiBadge">—</span>
+  <div class="split">
+    <div class="col-left">
+      <div id="zoneFresque">
+        <label>Image</label>
+        <div class="banque" id="bqF"></div>
+        <label>Cadrage — fais glisser l'image. Les traits blancs montrent les joints.</label>
+        <canvas class="zone" id="cvCadrage"></canvas>
+        <div class="rang">
+          <label for="zoom">Zoom</label>
+          <input type="range" id="zoom" min="1" max="2" step="0.01" value="1">
+          <span class="badge ok" id="dpiBadge">—</span>
+        </div>
+      </div>
+
+      <div id="zoneAz">
+        <label>Motifs — choisis ton pinceau</label>
+        <div class="banque" id="bqA"></div>
+        <label>Touche un carreau pour appliquer le motif. Touche-le encore pour le faire pivoter.</label>
+        <div class="grille" id="grille">
+          <button type="button" onclick="tapCell(0)"></button>
+          <button type="button" onclick="tapCell(1)"></button>
+          <button type="button" onclick="tapCell(2)"></button>
+          <button type="button" onclick="tapCell(3)"></button>
+        </div>
+        <div class="actions">
+          <button class="btn2" onclick="azTout()">Tout remplir</button>
+          <button class="btn2" onclick="azRAZ()">Recommencer</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-right">
+      <label>Ta crédence, joints compris</label>
+      <canvas class="zone" id="cvVerif"></canvas>
+      <div class="recap" id="recap"></div>
     </div>
   </div>
-
-  <div id="zoneAz">
-    <label>Motifs — choisis ton pinceau</label>
-    <div class="banque" id="bqA"></div>
-    <label>Touche un carreau pour appliquer le motif. Touche-le encore pour le faire pivoter.</label>
-    <div class="grille" id="grille">
-      <button type="button" onclick="tapCell(0)"></button>
-      <button type="button" onclick="tapCell(1)"></button>
-      <button type="button" onclick="tapCell(2)"></button>
-      <button type="button" onclick="tapCell(3)"></button>
-    </div>
-    <div class="actions">
-      <button class="btn2" onclick="azTout()">Tout remplir</button>
-      <button class="btn2" onclick="azRAZ()">Recommencer</button>
-    </div>
-  </div>
-
-  <label>Ta crédence, joints compris</label>
-  <canvas class="zone" id="cvVerif"></canvas>
-  <div class="recap" id="recap"></div>
 </section>
 
 <section id="s3">
