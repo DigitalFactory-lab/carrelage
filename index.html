@@ -48,7 +48,7 @@ header{display:flex; align-items:center; gap:14px; padding:12px 0 20px;}
 .logo{display:grid; grid-template-columns:repeat(2,15px); gap:3px; background:var(--border); padding:3px; border-radius:5px;}
 .logo span{width:15px; height:15px; background:var(--mauve); display:block; border-radius:2px;}
 .logo span:nth-child(2),.logo span:nth-child(3){background:var(--card);}
-h1{font-size:22px; font-weight:800; margin:0; letter-spacing:-0.02em; color:var(--text);}
+h1{font-size:19px; font-weight:800; margin:0; letter-spacing:-0.01em; color:var(--text);}
 h1 small{display:block; font-size:13px; font-weight:600; color:var(--muted); margin-top:2px;}
 
 .steps{display:flex; gap:2px; background:var(--wash); border:1px solid var(--border); padding:3px; border-radius:11px; margin-bottom:24px;}
@@ -61,7 +61,7 @@ h1 small{display:block; font-size:13px; font-weight:600; color:var(--muted); mar
 .steps div.on{background:var(--mauve); color:#fff;}
 .steps div.done{background:var(--blue-soft); color:var(--blue-dark);}
 
-h2{font-size:21px; font-weight:800; letter-spacing:-0.01em; margin:0 0 5px; color:var(--text);}
+h2{font-size:28px; font-weight:800; letter-spacing:-0.02em; line-height:1.15; margin:0 0 7px; color:var(--text);}
 .aide{color:var(--muted); font-size:15px; margin:0 0 18px;}
 section{display:none;} section.on{display:block;}
 
@@ -189,7 +189,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 /* ---- Guides à l'écran (plan de pose, procédure VersaWorks) : page dans le design du
    site, à cocher. --accent définit l'identité de chaque guide (fuchsia par défaut,
    surchargeable en inline-style sur le conteneur : style="--accent:var(--mauve)"). ---- */
-.plan-titre{display:flex; align-items:center; gap:10px; font-size:21px; font-weight:800; letter-spacing:-0.01em; margin:0 0 6px; color:var(--text);}
+.plan-titre{display:flex; align-items:center; gap:11px; font-size:26px; font-weight:800; letter-spacing:-0.02em; line-height:1.15; margin:0 0 7px; color:var(--text);}
 .modal .box h2.plan-titre .ic{color:var(--accent, var(--fuchsia)); width:24px; height:24px;}
 .plan-sous{color:var(--muted); font-size:14px; margin:0 0 16px; padding-bottom:12px; border-bottom:1.5px solid var(--accent, var(--fuchsia));}
 .plan-img{width:100%; max-width:300px; border-radius:var(--radius-md); border:1px solid var(--border); display:block; margin:0 0 16px;}
@@ -201,7 +201,8 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .pc input{margin:0; width:22px; height:22px; flex:none; accent-color:var(--accent, var(--fuchsia)); cursor:pointer;}
 .pc-n{font-weight:800; color:var(--accent, var(--fuchsia)); flex:none; min-width:1.1em; font-variant-numeric:tabular-nums;}
 .pc-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:11px;}
-.pc-txt{font-size:15px;}
+.pc-txt{font-size:15.5px; font-weight:400; line-height:1.5;}
+.pc-txt b{font-weight:700;}
 .pc:has(input:checked){background:var(--wash);}
 .pc:has(input:checked) .pc-txt{color:var(--muted); text-decoration:line-through;}
 .pc:has(input:checked) .pc-n{color:var(--muted);}
@@ -975,10 +976,10 @@ function etapesVersa(){
   return [
     {texte:'Vérifier que le support <b>MO-240</b> est bien sélectionné dans VersaWorks.'},
     {texte:'Dans la barre d’outils, ouvrir <b>Paramètres</b> (icône engrenage).'},
-    {texte:'Dans la section <b>Qualité</b>, choisir le <b>Type de support</b> : <b>Generic</b> pour toute impression couleur ou blanc ; <b>Special Effect</b> pour l’embossage, le vernis mat ou brillant.'},
-    {texte:'Toujours dans <b>Qualité</b>, choisir la <b>Qualité d’impression</b> : pour un gabarit, <b>Draft</b> suffit — c’est un simple tracé de positionnement, pas une image à restituer fidèlement.'},
-    {texte:'Sous-couche blanc (si besoin) : reprendre le même fichier, sélectionner <b>Mode → White</b>, puis <b>Générer une plaque de couleur spéciale</b>. Dans <b>Forme</b>, plusieurs options existent ; en général choisir <b>Zone d’impression</b>. Toujours imprimer le blanc <b>avant</b> la couleur.', cle:true},
-    {texte:'Impression couleur : reprendre la même image (après le blanc si besoin), sélectionner <b>Mode → Couleur (CMYK/Or/Re)</b> : <b>12 passes</b> pour la meilleure qualité, <b>10 passes</b> pour aller plus vite. Qualité d’impression : <b>Standard</b>.'},
+    {texte:'Dans la section Qualité, choisir le type de support : <b>Generic</b> pour toute impression couleur ou blanc ; <b>Special Effect</b> pour l’embossage, le vernis mat ou brillant.'},
+    {texte:'Toujours dans Qualité, choisir la qualité d’impression : pour un gabarit, <b>Draft</b> suffit — c’est un simple tracé de positionnement, pas une image à restituer fidèlement.'},
+    {texte:'Sous-couche blanc (si besoin) : reprendre le même fichier, sélectionner Mode → <b>White</b>, puis Générer une plaque de couleur spéciale. Dans Forme, plusieurs options existent ; en général choisir Zone d’impression. Toujours imprimer le blanc <b>avant</b> la couleur.', cle:true},
+    {texte:'Impression couleur : reprendre la même image (après le blanc si besoin), sélectionner Mode → Couleur (CMYK/Or/Re) : <b>12 passes</b> pour la meilleure qualité, <b>10 passes</b> pour aller plus vite. Qualité d’impression : Standard.'},
     {texte:'Valider, puis cliquer sur <b>Imprimer</b>.'}
   ];
 }
