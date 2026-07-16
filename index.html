@@ -330,7 +330,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <button onclick="ouvreVersa()"><span class="num">5</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher (imprimable)</small></span></button>
   </div>
   <div class="enc"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
-  <button class="btn2" id="btnRecommencer" onclick="recommencer()" style="width:100%; justify-content:center; margin-top:18px; display:flex; align-items:center; gap:9px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Nouveau stagiaire — retour au début</button>
+  <button class="btn2" id="btnRecommencer" onclick="recommencer()" style="width:100%; justify-content:center; margin-top:18px; display:flex; align-items:center; gap:9px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Retour au début</button>
 </section>
 
 <div class="pied"><button onclick="ouvreCat()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Catalogue d'images (formateur)</button></div>
@@ -768,7 +768,7 @@ function nav(s){
 /* Retour au début pour le stagiaire suivant : remet la composition à zéro
    (le catalogue d’images du formateur, lui, est conservé). */
 function recommencer(){
-  if(!confirm('Recommencer pour un nouveau stagiaire ?\n\nLa composition actuelle sera perdue. Le catalogue d’images est conservé.')) return;
+  if(!confirm('Retourner au début ?\n\nLa composition actuelle sera perdue. Le catalogue d’images est conservé.')) return;
   state.step=0; state.prenom=''; state.mode=null; state.tile=100; state.joint=3;
   state.f={img:0, zoom:1, ox:.5, oy:.5};
   state.az=[{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0}];
