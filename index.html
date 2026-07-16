@@ -637,12 +637,12 @@ cvC.addEventListener('pointermove',e=>{
   const rect=cvC.getBoundingClientRect();
   state.f.ox=clamp(drag.ox-(e.clientX-drag.x)/rect.width,0,1);
   state.f.oy=clamp(drag.oy-(e.clientY-drag.y)/rect.height,0,1);
-  dessineCadrage();
+  rendu();
 });
 cvC.addEventListener('pointerup',()=>{drag=null;});
 cvC.addEventListener('pointercancel',()=>{drag=null;});
 document.getElementById('zoom').addEventListener('input',e=>{
-  state.f.zoom=+e.target.value; dessineCadrage();
+  state.f.zoom=+e.target.value; rendu();
 });
 
 /* ---------- réglages ---------- */
