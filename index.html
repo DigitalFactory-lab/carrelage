@@ -169,22 +169,28 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .enc .ic{flex:none; margin-top:1px; color:var(--blue);}
 .note{font-size:13px; color:var(--muted);}
 
-/* ---- Plan de pose à l'écran : page dans le design du site, identité fuchsia, à cocher ---- */
+/* ---- Guides à l'écran (plan de pose, procédure VersaWorks) : page dans le design du
+   site, à cocher. --accent définit l'identité de chaque guide (fuchsia par défaut,
+   surchargeable en inline-style sur le conteneur : style="--accent:var(--mauve)"). ---- */
 .plan-titre{display:flex; align-items:center; gap:10px; font-size:21px; font-weight:800; letter-spacing:-0.01em; margin:0 0 6px; color:var(--text);}
-.modal .box h2.plan-titre .ic{color:var(--fuchsia); width:24px; height:24px;}
-.plan-sous{color:var(--muted); font-size:14px; margin:0 0 16px; padding-bottom:12px; border-bottom:1.5px solid var(--fuchsia);}
+.modal .box h2.plan-titre .ic{color:var(--accent, var(--fuchsia)); width:24px; height:24px;}
+.plan-sous{color:var(--muted); font-size:14px; margin:0 0 16px; padding-bottom:12px; border-bottom:1.5px solid var(--accent, var(--fuchsia));}
 .plan-img{width:100%; max-width:300px; border-radius:var(--radius-md); border:1px solid var(--border); display:block; margin:0 0 16px;}
 .plan-hint{font-size:14px; color:var(--muted); margin:0 0 12px;}
 .plan-check{display:grid; gap:10px;}
 .pc{display:flex; gap:13px; align-items:flex-start; padding:14px 16px; border:1px solid var(--border);
   border-radius:var(--radius-md); cursor:pointer; background:var(--card); transition:background .15s, border-color .15s;}
 .pc:hover{border-color:var(--muted);}
-.pc input{margin:0; width:22px; height:22px; flex:none; accent-color:var(--fuchsia); cursor:pointer;}
-.pc-n{font-weight:800; color:var(--fuchsia); flex:none; min-width:1.1em; font-variant-numeric:tabular-nums;}
+.pc input{margin:0; width:22px; height:22px; flex:none; accent-color:var(--accent, var(--fuchsia)); cursor:pointer;}
+.pc-n{font-weight:800; color:var(--accent, var(--fuchsia)); flex:none; min-width:1.1em; font-variant-numeric:tabular-nums;}
 .pc-txt{flex:1; font-size:15px;}
 .pc:has(input:checked){background:var(--wash);}
 .pc:has(input:checked) .pc-txt{color:var(--muted); text-decoration:line-through;}
 .pc:has(input:checked) .pc-n{color:var(--muted);}
+/* étape « point clé » à mettre en évidence (ex. sous-couche blanc) */
+.pc-cle{border-color:var(--warn); background:var(--warn-soft);}
+.pc-tag{display:inline-block; background:var(--warn); color:#fff; font-size:11px; font-weight:800;
+  text-transform:uppercase; letter-spacing:.04em; border-radius:999px; padding:3px 10px; margin-right:8px; vertical-align:2px;}
 
 /* pictogrammes SVG (Lucide-style) — jamais d'emoji, cf. charte Cyber */
 .ic{width:1.15em; height:1.15em; display:inline-block; vertical-align:-.2em; flex:none;}
@@ -312,6 +318,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <button onclick="exportGabarit()"><span class="num">2</span><span><b>Gabarit de placement</b><small>PDF — même page, le tracé où poser les carreaux</small></span></button>
     <button onclick="exportLaser()"><span class="num">3</span><span><b>Découpe + gravure laser</b><small>SVG — contour (rouge = découpe) et emplacements numérotés (noir = gravure)</small></span></button>
     <button onclick="ouvrePlan()"><span class="num">4</span><span><b>Plan de pose</b><small>À suivre sur la tablette pendant la pose — étapes à cocher (imprimable)</small></span></button>
+    <button onclick="ouvreVersa()"><span class="num">5</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher (imprimable)</small></span></button>
   </div>
   <div class="enc"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
 </section>
@@ -346,6 +353,16 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <div class="actions" style="justify-content:space-between; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
       <button class="btn2" onclick="imprimePlan()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimer</button>
       <button class="btn2" onclick="fermePlan()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalVersa">
+  <div class="box">
+    <div id="versaEcran"></div>
+    <div class="actions" style="justify-content:space-between; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
+      <button class="btn2" onclick="imprimeVersa()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimer</button>
+      <button class="btn2" onclick="fermeVersa()">Fermer</button>
     </div>
   </div>
 </div>
@@ -917,6 +934,40 @@ function imprimePlan(){
     +'<p class="sous">Atelier Crédence — Digital Factory — '+new Date().toLocaleDateString('fr-BE')+' — '+sousTitrePose()+'</p>'
     +'<img src="'+cv.toDataURL('image/jpeg',.85)+'">'
     +'<ol>'+etapesPose().map(t=>'<li>'+t+'</li>').join('')+'</ol>';
+  setTimeout(()=>window.print(),150);
+}
+
+/* Procédure VersaWorks — réglages d’impression, partagée écran/impression */
+function etapesVersa(){
+  return [
+    {texte:'Vérifier que le support <b>MO-240</b> est bien sélectionné dans VersaWorks.'},
+    {texte:'Dans la barre d’outils, ouvrir <b>Paramètres</b> (icône engrenage).'},
+    {texte:'Dans la section <b>Qualité</b>, choisir le <b>Type de support</b> : <b>Generic</b> pour toute impression couleur ou blanc ; <b>Special Effect</b> pour l’embossage, le vernis mat ou brillant.'},
+    {texte:'Toujours dans <b>Qualité</b>, choisir la <b>Qualité d’impression</b> : pour un gabarit, <b>Draft</b> suffit — c’est un simple tracé de positionnement, pas une image à restituer fidèlement.'},
+    {texte:'Sous-couche blanc (si besoin) : reprendre le même fichier, sélectionner <b>Mode → White</b>, puis <b>Générer une plaque de couleur spéciale</b>. Dans <b>Forme</b>, plusieurs options existent ; en général choisir <b>Zone d’impression</b>. Toujours imprimer le blanc <b>avant</b> la couleur.', cle:true},
+    {texte:'Impression couleur : reprendre la même image (après le blanc si besoin), sélectionner <b>Mode → Couleur (CMYK/Or/Re)</b> : <b>12 passes</b> pour la meilleure qualité, <b>10 passes</b> pour aller plus vite. Qualité d’impression : <b>Standard</b>.'},
+    {texte:'Valider, puis cliquer sur <b>Imprimer</b>.'}
+  ];
+}
+function ouvreVersa(){
+  const check=etapesVersa().map((e,i)=>
+    '<label class="pc'+(e.cle?' pc-cle':'')+'"><input type="checkbox"><span class="pc-n">'+(i+1)+'</span><span class="pc-txt">'+(e.cle?'<span class="pc-tag">Point clé</span>':'')+e.texte+'</span></label>').join('');
+  document.getElementById('versaEcran').innerHTML=
+    '<div style="--accent:var(--mauve)">'
+    +'<h2 class="plan-titre"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Procédure VersaWorks</h2>'
+    +'<p class="plan-sous">Réglages d’impression, dans l’ordre</p>'
+    +'<p class="plan-hint">Coche chaque étape au fur et à mesure des réglages.</p>'
+    +'<div class="plan-check">'+check+'</div>'
+    +'</div>';
+  const box=document.querySelector('#modalVersa .box'); if(box) box.scrollTop=0;
+  document.getElementById('modalVersa').classList.add('on');
+}
+function fermeVersa(){ document.getElementById('modalVersa').classList.remove('on'); }
+function imprimeVersa(){
+  document.getElementById('planPose').innerHTML=
+    '<h1>Procédure VersaWorks</h1>'
+    +'<p class="sous">Atelier Crédence — Digital Factory — '+new Date().toLocaleDateString('fr-BE')+' — Réglages d’impression</p>'
+    +'<ol>'+etapesVersa().map(e=>'<li>'+(e.cle?'<b>[Point clé] </b>':'')+e.texte+'</li>').join('')+'</ol>';
   setTimeout(()=>window.print(),150);
 }
 
