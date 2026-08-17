@@ -210,12 +210,17 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .pc-cle{border-color:var(--fuchsia); background:var(--fuchsia-soft);}
 .pc-tag{display:inline-block; background:var(--fuchsia); color:#fff; font-size:11px; font-weight:800;
   text-transform:uppercase; letter-spacing:.04em; border-radius:999px; padding:3px 10px; margin-right:8px; vertical-align:2px;}
-/* photo d'illustration par étape — emplacement optionnel, disparaît si le fichier est absent */
-.pc-media{display:block; position:relative; width:100%; margin:0; aspect-ratio:16/9; max-width:380px; border-radius:var(--radius-md);
+/* photo d'illustration par étape — emplacement optionnel, disparaît si le fichier est absent.
+   Les captures sources n'ont pas toutes le même format : image affichée en entier (object-fit:
+   contain, hauteur naturelle), jamais rognée. Le cadre 16:9 ne sert que de silhouette tant qu'il
+   n'y a pas d'image (:not(:has(img))) — une fois l'image chargée, la boîte prend sa vraie taille. */
+.pc-media{display:block; position:relative; width:100%; margin:0; max-width:420px; border-radius:var(--radius-md);
   overflow:hidden; border:1px solid var(--border); background:var(--grey-soft);}
-.pc-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+.pc-media:not(:has(img)){aspect-ratio:16/9;}
+.pc-media img{display:block; width:100%; height:auto; max-height:420px; object-fit:contain;}
 .pc-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:5px; text-align:center; padding:10px; color:var(--muted);}
+.pc-media:has(img) .pc-ph{display:none;}
 .pc-ph svg{width:20px; height:20px; color:#B7B4CC;}
 .pc-ph small{font-size:10.5px; color:#A6A3B8; font-family:ui-monospace,"SF Mono",Menlo,monospace;}
 /* étape à plusieurs photos (ex. sous-couche blanc : Mode → White + Générer la plaque) */
