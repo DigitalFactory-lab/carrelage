@@ -211,13 +211,18 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .pc-tag{display:inline-block; background:var(--fuchsia); color:#fff; font-size:11px; font-weight:800;
   text-transform:uppercase; letter-spacing:.04em; border-radius:999px; padding:3px 10px; margin-right:8px; vertical-align:2px;}
 /* photo d'illustration par étape — emplacement optionnel, disparaît si le fichier est absent */
-.pc-media{position:relative; margin:0; aspect-ratio:16/9; max-width:380px; border-radius:var(--radius-md);
+.pc-media{display:block; position:relative; width:100%; margin:0; aspect-ratio:16/9; max-width:380px; border-radius:var(--radius-md);
   overflow:hidden; border:1px solid var(--border); background:var(--grey-soft);}
 .pc-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
 .pc-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:5px; text-align:center; padding:10px; color:var(--muted);}
 .pc-ph svg{width:20px; height:20px; color:#B7B4CC;}
 .pc-ph small{font-size:10.5px; color:#A6A3B8; font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+/* étape à plusieurs photos (ex. sous-couche blanc : Mode → White + Générer la plaque) */
+.pc-media-row{display:flex; gap:14px; flex-wrap:wrap;}
+.pc-media-row .pc-media-item{display:block; flex:1 1 160px; max-width:280px;}
+.pc-media-row .pc-media{max-width:none;}
+.pc-media-cap{display:block; font-size:12px; font-weight:600; color:var(--muted); margin-top:6px; text-align:center;}
 
 /* pictogrammes SVG (Lucide-style) — jamais d'emoji, cf. charte Cyber */
 .ic{width:1.15em; height:1.15em; display:inline-block; vertical-align:-.2em; flex:none;}
@@ -978,15 +983,19 @@ function etapesVersa(){
     {texte:'Dans la barre d’outils, ouvrir <b>Paramètres</b> (icône engrenage).'},
     {texte:'Dans la section Qualité, choisir le type de support : <b>Generic</b> pour toute impression couleur ou blanc ; <b>Special Effect</b> pour l’embossage, le vernis mat ou brillant.'},
     {texte:'Toujours dans Qualité, choisir la qualité d’impression : pour un gabarit, <b>Draft</b> suffit — c’est un simple tracé de positionnement, pas une image à restituer fidèlement.'},
-    {texte:'Sous-couche blanc (si besoin) : reprendre le même fichier, sélectionner Mode → <b>White</b>, puis Générer une plaque de couleur spéciale. Dans Forme, plusieurs options existent ; en général choisir Zone d’impression. Toujours imprimer le blanc <b>avant</b> la couleur.', cle:true},
+    {texte:'Sous-couche blanc (si besoin) : reprendre le même fichier, sélectionner Mode → <b>White</b>, puis Générer une plaque de couleur spéciale. Dans Forme, plusieurs options existent ; en général choisir Zone d’impression. Toujours imprimer le blanc <b>avant</b> la couleur.', cle:true,
+      medias:[{s:'5a', label:'Mode → White'},{s:'5b', label:'Générer une plaque de couleur spéciale'}]},
     {texte:'Impression couleur : reprendre la même image (après le blanc si besoin), sélectionner Mode → Couleur (CMYK/Or/Re) : <b>12 passes</b> pour la meilleure qualité, <b>10 passes</b> pour aller plus vite. Qualité d’impression : Standard.'},
     {texte:'Valider, puis cliquer sur <b>Imprimer</b>.'}
   ];
 }
 function ouvreVersa(){
+  const uneImage=s=>'<span class="pc-media"><span class="pc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><small>assets/versaworks/etape-'+s+'.jpg</small></span><img src="assets/versaworks/etape-'+s+'.jpg" alt="Illustration étape '+s+'" onerror="this.remove()"></span>';
   const check=etapesVersa().map((e,i)=>{
     const n=i+1;
-    const media='<span class="pc-media"><span class="pc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><small>assets/versaworks/etape-'+n+'.jpg</small></span><img src="assets/versaworks/etape-'+n+'.jpg" alt="Illustration étape '+n+'" onerror="this.remove()"></span>';
+    const media=e.medias
+      ? '<span class="pc-media-row">'+e.medias.map(m=>'<span class="pc-media-item">'+uneImage(m.s)+'<small class="pc-media-cap">'+m.label+'</small></span>').join('')+'</span>'
+      : uneImage(n);
     return '<label class="pc'+(e.cle?' pc-cle':'')+'"><input type="checkbox"><span class="pc-n">'+n+'</span><span class="pc-body"><span class="pc-txt">'+(e.cle?'<span class="pc-tag">Point clé</span>':'')+e.texte+'</span>'+media+'</span></label>';
   }).join('');
   document.getElementById('versaEcran').innerHTML=
