@@ -78,9 +78,12 @@ section{display:none;} section.on{display:block;}
 .hero-copy .aide{margin:0;}
 label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:var(--text);}
 section > label:first-of-type{margin-top:0;}
-input[type=text]{width:100%; padding:13px 14px; font-size:18px; border:1.5px solid var(--border);
+input[type=text],input[type=number]{width:100%; padding:13px 14px; font-size:18px; border:1.5px solid var(--border);
   border-radius:var(--radius-md); background:var(--card); color:var(--text);}
-input[type=text]:focus{outline:none; border-color:var(--mauve); box-shadow:0 0 0 3px var(--mauve-soft);}
+input[type=text]:focus,input[type=number]:focus{outline:none; border-color:var(--mauve); box-shadow:0 0 0 3px var(--mauve-soft);}
+.rang-libre{display:flex; align-items:center; gap:12px;}
+.rang-libre input{flex:1;}
+.rang-libre span{flex:none; font-weight:700; color:var(--muted);}
 
 .toggle{display:flex; gap:2px; background:var(--wash); border:1px solid var(--border); padding:3px; border-radius:var(--radius-md);}
 .toggle button{flex:1; padding:12px 6px; font-size:15px; border:none; background:transparent;
@@ -296,10 +299,20 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
   <p class="aide">Deux décisions de carreleur. Regarde l'aperçu changer.</p>
   <div class="split">
     <div class="col-left">
-      <label>Format du carreau</label>
-      <div class="toggle">
-        <button id="t100" class="on" onclick="setTile(100)">10 × 10 cm<small>petit format</small></button>
-        <button id="t147" onclick="setTile(147)">14,7 × 14,7 cm<small>grand format</small></button>
+      <div id="blocFormat">
+        <label>Format du carreau</label>
+        <div class="toggle">
+          <button id="t100" class="on" onclick="setTile(100)">10 × 10 cm<small>petit format</small></button>
+          <button id="t147" onclick="setTile(147)">14,7 × 14,7 cm<small>grand format</small></button>
+        </div>
+      </div>
+      <div id="blocFormatLibre">
+        <label for="tileLibre">Taille du carreau (côté, en mm)</label>
+        <div class="rang-libre">
+          <input type="number" id="tileLibre" min="20" max="300" step="1" value="100">
+          <span>mm</span>
+        </div>
+        <p class="note">Utilise la taille exacte du carreau que tu as sous la main pour ce test.</p>
       </div>
       <div id="blocJoint">
         <label>Largeur du joint</label>
@@ -370,11 +383,13 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <button onclick="ouvreVersa()"><span class="num">5</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher</small></span></button>
   </div>
   <div class="dl" id="dlUnique">
-    <button onclick="exportUVUnique()"><span class="num">1</span><span><b>Impression test</b><small>PDF — un seul carreau, avec 2 mm de débord</small></span></button>
-    <button onclick="ouvreVersa()"><span class="num">2</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher</small></span></button>
+    <button onclick="exportGabaritUnique()"><span class="num">1</span><span><b>Gabarit de placement</b><small>PDF — le contour à imprimer sur le plateau, avant le carreau</small></span></button>
+    <button onclick="exportUVUnique()"><span class="num">2</span><span><b>Impression test</b><small>PDF — le carreau, avec 2 mm de débord</small></span></button>
+    <button onclick="ouvreTest()"><span class="num">3</span><span><b>Procédure Test machine</b><small>Les étapes dans l'ordre — étapes à cocher</small></span></button>
+    <button onclick="ouvreVersa()"><span class="num">4</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher</small></span></button>
   </div>
   <div class="enc" id="encNormal"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
-  <div class="enc" id="encUnique"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>C'est un simple carreau de test, pas un morceau de la crédence finale — pas de plaque support ni de collage à prévoir. Vérifie juste le rendu (couleurs, netteté) une fois imprimé.</span></div>
+  <div class="enc" id="encUnique"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord (contour seul, sans image), carreau posé dans le trait plein, puis impression test par-dessus. C'est un simple carreau de test, pas un morceau de la crédence finale — pas de plaque support ni de collage à prévoir.</span></div>
   <button class="btn2" id="btnRecommencer" onclick="recommencer()" style="width:100%; justify-content:center; margin-top:18px; display:flex; align-items:center; gap:9px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Retour au début</button>
 </section>
 
@@ -416,6 +431,15 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <div id="versaEcran"></div>
     <div class="actions" style="justify-content:flex-end; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
       <button class="btn2" onclick="fermeVersa()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalTest">
+  <div class="box">
+    <div id="testEcran"></div>
+    <div class="actions" style="justify-content:flex-end; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
+      <button class="btn2" onclick="fermeTest()">Fermer</button>
     </div>
   </div>
 </div>
@@ -741,6 +765,7 @@ function setMode(m){
   document.getElementById('cModeF').classList.toggle('on',m==='fresque');
   document.getElementById('cModeA').classList.toggle('on',m==='azulejos');
   document.getElementById('cModeU').classList.toggle('on',m==='unique');
+  if(m==='unique') document.getElementById('tileLibre').value=state.tile;
   majNav();
 }
 function setTile(t){
@@ -749,6 +774,11 @@ function setTile(t){
   document.getElementById('t147').classList.toggle('on',t===147);
   rendu();
 }
+document.getElementById('tileLibre').addEventListener('input',e=>{
+  const v=clamp(Math.round(+e.target.value||0), 20, 300);
+  state.tile=v;
+  rendu();
+});
 document.getElementById('joint').addEventListener('input',e=>{
   state.joint=+e.target.value;
   document.getElementById('jointVal').textContent=state.joint+' mm';
@@ -761,6 +791,8 @@ function rendu(){
   const u=state.mode==='unique';
   if(state.step===1){
     document.getElementById('blocJoint').style.display=u?'none':'block';
+    document.getElementById('blocFormat').style.display=u?'none':'block';
+    document.getElementById('blocFormatLibre').style.display=u?'block':'none';
     const cf=document.getElementById('cvFormat');
     if(u){
       dessineCredenceUnique(cf, larg(cf));
@@ -806,7 +838,7 @@ function rendu(){
   }
   if(state.step===3){
     document.getElementById('aideFichiers').textContent=u
-      ?'Un seul fichier à envoyer à l’imprimante — rien à assembler ensuite.'
+      ?'Deux fichiers à envoyer à l’imprimante, dans l’ordre — rien à assembler ensuite.'
       :'Chaque fichier part vers une machine. Le plan de pose t’accompagne au collage.';
     document.getElementById('dlNormal').style.display=u?'none':'grid';
     document.getElementById('dlUnique').style.display=u?'grid':'none';
@@ -871,6 +903,7 @@ function recommencer(){
   document.getElementById('cModeU').classList.remove('on');
   document.getElementById('t100').classList.add('on');
   document.getElementById('t147').classList.remove('on');
+  document.getElementById('tileLibre').value=100;
   document.getElementById('joint').value=3;
   document.getElementById('jointVal').textContent='3 mm';
   document.getElementById('zoom').value=1;
@@ -1003,6 +1036,26 @@ function exportGabarit(){
     +'(carreau '+t+' mm - ecart '+ECART+' mm - debord '+DEBORD+' mm - trait plein = carreau) Tj ET\n';
   dl(URL.createObjectURL(ecrisPDF(page, c, [])), 'gabarit_placement_'+t+'mm.pdf');
 }
+/* mode « Test machine » : même principe qu'exportGabarit(), un seul carreau.
+   Trait plein = contour exact du carreau à poser. Trait pointillé = débord de
+   l'image (2 mm), qui n'existe que dans le fichier d'impression, pas ici. */
+function exportGabaritUnique(){
+  const page=state.tile+2*MARGE, pW=page*K, t=state.tile, x=MARGE, y=MARGE;
+  const Y = mm => pW - mm*K;
+  let c='0 G 0.8 w\n';
+  c+=(x*K).toFixed(2)+' '+Y(y+t).toFixed(2)+' '
+    +(t*K).toFixed(2)+' '+(t*K).toFixed(2)+' re S\n';
+  c+='[3 3] 0 d 0.4 w\n'
+    +((x-DEBORD)*K).toFixed(2)+' '+Y(y+t+DEBORD).toFixed(2)+' '
+    +((t+2*DEBORD)*K).toFixed(2)+' '+((t+2*DEBORD)*K).toFixed(2)+' re S\n'
+    +'[] 0 d 0.8 w\n';
+  c+='1.2 w 0 '+Y(0).toFixed(2)+' m '+(16*K).toFixed(2)+' '+Y(0).toFixed(2)+' l S\n'
+    +'0 '+Y(0).toFixed(2)+' m 0 '+Y(16).toFixed(2)+' l S\n';
+  c+='BT /F1 7 Tf '+(20*K).toFixed(2)+' '+Y(8).toFixed(2)+' Td (origine machine) Tj ET\n';
+  c+='BT /F1 6 Tf '+(MARGE*K).toFixed(2)+' '+Y(page-2).toFixed(2)+' Td '
+    +'(carreau '+t+' mm - debord '+DEBORD+' mm - trait plein = carreau) Tj ET\n';
+  dl(URL.createObjectURL(ecrisPDF(page, c, [])), 'gabarit_test_'+t+'mm.pdf');
+}
 
 function chiffreSVG(n,x,y,col){
   let s='';
@@ -1095,6 +1148,33 @@ function ouvreVersa(){
   document.getElementById('modalVersa').classList.add('on');
 }
 function fermeVersa(){ document.getElementById('modalVersa').classList.remove('on'); }
+
+/* Procédure courte — mode Test machine : un seul carreau, sans joint */
+function etapesTest(){
+  return [
+    {texte:'Imprime le <b>gabarit</b> (fichier 1) directement sur le plateau de la machine — juste le contour, sans image.'},
+    {texte:'Place le carreau bien à l’intérieur du contour en trait plein.'},
+    {texte:'Règle à nouveau la <b>hauteur du plateau</b> : le carreau a de l’épaisseur, la distance entre la tête d’impression et la surface a changé depuis le gabarit (imprimé à plat, sans rien dessus).', cle:true},
+    {texte:'Imprime l’<b>impression test</b> (fichier 2) par-dessus, sans déplacer le carreau.'},
+    {texte:'Vérifie le résultat : couleurs, netteté, débord bien couvert jusqu’au bord.'}
+  ];
+}
+function ouvreTest(){
+  const check=etapesTest().map((e,i)=>{
+    const n=i+1;
+    return '<label class="pc'+(e.cle?' pc-cle':'')+'"><input type="checkbox"><span class="pc-n">'+n+'</span><span class="pc-body"><span class="pc-txt">'+(e.cle?'<span class="pc-tag">Point clé</span>':'')+e.texte+'</span></span></label>';
+  }).join('');
+  document.getElementById('testEcran').innerHTML=
+    '<div style="--accent:var(--mauve)">'
+    +'<h2 class="plan-titre"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Procédure Test machine</h2>'
+    +'<p class="plan-sous">Un carreau seul, dans l’ordre</p>'
+    +'<p class="plan-hint">Coche chaque étape au fur et à mesure.</p>'
+    +'<div class="plan-check">'+check+'</div>'
+    +'</div>';
+  const box=document.querySelector('#modalTest .box'); if(box) box.scrollTop=0;
+  document.getElementById('modalTest').classList.add('on');
+}
+function fermeTest(){ document.getElementById('modalTest').classList.remove('on'); }
 
 window.addEventListener('resize',rendu);
 document.getElementById('prenom').addEventListener('input',majNav);
