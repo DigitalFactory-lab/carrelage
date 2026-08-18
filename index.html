@@ -84,6 +84,9 @@ input[type=text]:focus,input[type=number]:focus{outline:none; border-color:var(-
 .rang-libre{display:flex; align-items:center; gap:12px;}
 .rang-libre input{flex:1;}
 .rang-libre span{flex:none; font-weight:700; color:var(--muted);}
+.dims-libre{display:flex; gap:16px;}
+.dims-libre>div{flex:1;}
+.dims-libre label{font-size:13px; font-weight:600; margin:0 0 6px; color:var(--muted);}
 
 .toggle{display:flex; gap:2px; background:var(--wash); border:1px solid var(--border); padding:3px; border-radius:var(--radius-md);}
 .toggle button{flex:1; padding:12px 6px; font-size:15px; border:none; background:transparent;
@@ -307,12 +310,18 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
         </div>
       </div>
       <div id="blocFormatLibre">
-        <label for="tileLibre">Taille du carreau (côté, en mm)</label>
-        <div class="rang-libre">
-          <input type="number" id="tileLibre" min="20" max="300" step="1" value="100">
-          <span>mm</span>
+        <label>Taille du carreau (mm) — carré ou rectangulaire</label>
+        <div class="dims-libre">
+          <div>
+            <label for="tileLibreW">Largeur</label>
+            <div class="rang-libre"><input type="number" id="tileLibreW" min="20" max="300" step="1" value="100"><span>mm</span></div>
+          </div>
+          <div>
+            <label for="tileLibreH">Hauteur</label>
+            <div class="rang-libre"><input type="number" id="tileLibreH" min="20" max="300" step="1" value="100"><span>mm</span></div>
+          </div>
         </div>
-        <p class="note">Utilise la taille exacte du carreau que tu as sous la main pour ce test.</p>
+        <p class="note">Utilise les dimensions exactes du carreau que tu as sous la main pour ce test.</p>
       </div>
       <div id="blocJoint">
         <label>Largeur du joint</label>
@@ -339,7 +348,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
       <div id="zoneFresque">
         <label>Image</label>
         <div class="banque" id="bqF"></div>
-        <label>Cadrage — fais glisser l'image. Les traits blancs montrent les joints.</label>
+        <label id="titreCadrage">Cadrage — fais glisser l'image. Les traits blancs montrent les joints.</label>
         <canvas class="zone" id="cvCadrage"></canvas>
         <div class="rang">
           <label for="zoom">Zoom</label>
@@ -483,6 +492,7 @@ const DEBORD = 2;     // débord d'impression autour de chaque carreau (mm)
 const MARGE = 5;      // marge de page du plateau (mm)
 
 const state = {step:0, prenom:'', mode:null, tile:100, joint:3,
+  tileW:100, tileH:100, /* mode « Test machine » : largeur/hauteur libres, carreau pas forcément carré */
   f:{img:0, zoom:1, ox:.5, oy:.5},
   az:[{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0}],
   brush:0};
@@ -606,12 +616,31 @@ function cropRect(){
 }
 /* largeur physique (mm) représentée par le cadrage : 2 carreaux + joint,
    ou un seul carreau sans joint en mode « Test machine ». */
-const zoneMm = () => state.mode==='unique' ? state.tile : W();
-function effDpi(){ const c=cropRect(); return c ? c.w/zoneMm()*25.4 : 0; }
+function effDpi(){ const c=cropRect(); return c ? c.w/W()*25.4 : 0; }
 function zoomMax(){
   const img=IMGS.fresque[state.f.img];
   if(!img||!img.width) return 2;
-  return clamp(Math.min(img.width,img.height)/zoneMm()*25.4/150, 1.01, 3);
+  return clamp(Math.min(img.width,img.height)/W()*25.4/150, 1.01, 3);
+}
+/* ---------- mode « Test machine » : carreau libre, carré ou rectangulaire ---------- */
+function cropRectUnique(){
+  const img=IMGS.fresque[state.f.img];
+  if(!img||!img.width) return null;
+  const ratio=state.tileW/state.tileH;
+  const baseW = img.width/img.height>ratio ? img.height*ratio : img.width;
+  const baseH = baseW/ratio;
+  const w=baseW/state.f.zoom, h=baseH/state.f.zoom;
+  const cx=clamp(state.f.ox*img.width, w/2, img.width-w/2);
+  const cy=clamp(state.f.oy*img.height, h/2, img.height-h/2);
+  return {x:cx-w/2, y:cy-h/2, w, h};
+}
+function effDpiUnique(){ const c=cropRectUnique(); return c ? c.w/state.tileW*25.4 : 0; }
+function zoomMaxUnique(){
+  const img=IMGS.fresque[state.f.img];
+  if(!img||!img.width) return 2;
+  const ratio=state.tileW/state.tileH;
+  const baseW = img.width/img.height>ratio ? img.height*ratio : img.width;
+  return clamp((baseW/state.tileW*25.4)/150, 1.01, 3);
 }
 
 /* un carreau, avec débord optionnel en mm sur les 4 côtés */
@@ -656,24 +685,27 @@ function dessineCredence(cv, largPx){
     ctx.drawImage(tuile(i,tp,0), x, y);
   }
 }
-/* mode « Test machine » : un seul carreau, sans joint — mêmes principes que
-   tuile()/dessineCredence() mais avec une seule tuile en référence d'échelle. */
-function tuileUnique(pxTile, bleedMm){
+/* mode « Test machine » : un seul carreau, carré ou rectangulaire, sans joint —
+   mêmes principes que tuile()/dessineCredence(), mais pxPerMm (plutôt qu'une
+   largeur de tuile) car les deux côtés peuvent différer. */
+function tuileUnique(pxPerMm, bleedMm){
   const b=bleedMm||0;
-  const total=state.tile+2*b;
-  const px=Math.max(1, Math.round(pxTile*total/state.tile));
-  const cv=document.createElement('canvas'); cv.width=px; cv.height=px;
+  const totalW=state.tileW+2*b, totalH=state.tileH+2*b;
+  const pxW=Math.max(1, Math.round(totalW*pxPerMm)), pxH=Math.max(1, Math.round(totalH*pxPerMm));
+  const cv=document.createElement('canvas'); cv.width=pxW; cv.height=pxH;
   const ctx=cv.getContext('2d');
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,px,px);
-  const img=IMGS.fresque[state.f.img], cr=cropRect();
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,pxW,pxH);
+  const img=IMGS.fresque[state.f.img], cr=cropRectUnique();
   if(!cr) return cv;
-  const s=cr.w/state.tile;
-  ctx.drawImage(img, cr.x-b*s, cr.y-b*s, total*s, total*s, 0, 0, px, px);
+  const s=cr.w/state.tileW;
+  ctx.drawImage(img, cr.x-b*s, cr.y-b*s, totalW*s, totalH*s, 0, 0, pxW, pxH);
   return cv;
 }
 function dessineCredenceUnique(cv, largPx){
-  cv.width=largPx; cv.height=largPx;
-  cv.getContext('2d').drawImage(tuileUnique(largPx,0), 0, 0);
+  const pxPerMm=largPx/state.tileW;
+  cv.width=largPx;
+  cv.height=Math.max(1, Math.round(state.tileH*pxPerMm));
+  cv.getContext('2d').drawImage(tuileUnique(pxPerMm,0), 0, 0);
 }
 function larg(el){ return Math.min(680, (el.parentElement.clientWidth||640)-2); }
 
@@ -724,21 +756,43 @@ function dessineCadrage(){
   ctx.fillRect((cr.x+cr.w)*s,cr.y*s,cv.width,cr.h*s);
   ctx.strokeStyle='#fff'; ctx.lineWidth=2.5;
   ctx.strokeRect(cr.x*s,cr.y*s,cr.w*s,cr.h*s);
-  if(state.mode!=='unique'){
-    const pm=cr.w/zoneMm()*s;
-    ctx.lineWidth=Math.max(1.5, state.joint*pm);
-    ctx.strokeStyle='rgba(255,255,255,.9)';
-    const mid=(state.tile+state.joint/2)*pm;
-    ctx.beginPath();
-    ctx.moveTo(cr.x*s+mid, cr.y*s); ctx.lineTo(cr.x*s+mid, (cr.y+cr.h)*s);
-    ctx.moveTo(cr.x*s, cr.y*s+mid); ctx.lineTo((cr.x+cr.w)*s, cr.y*s+mid);
-    ctx.stroke();
-  }
+  const pm=cr.w/W()*s;
+  ctx.lineWidth=Math.max(1.5, state.joint*pm);
+  ctx.strokeStyle='rgba(255,255,255,.9)';
+  const mid=(state.tile+state.joint/2)*pm;
+  ctx.beginPath();
+  ctx.moveTo(cr.x*s+mid, cr.y*s); ctx.lineTo(cr.x*s+mid, (cr.y+cr.h)*s);
+  ctx.moveTo(cr.x*s, cr.y*s+mid); ctx.lineTo((cr.x+cr.w)*s, cr.y*s+mid);
+  ctx.stroke();
   const d=Math.round(effDpi());
   const b=document.getElementById('dpiBadge');
   b.textContent=d+' dpi';
   b.className='badge '+(d>=250?'ok':(d>=110?'warn':'alerte'));
   document.getElementById('zoom').max=zoomMax().toFixed(2);
+}
+/* mode « Test machine » : même principe que dessineCadrage(), crop rectangulaire
+   (cropRectUnique), sans traits de joint (aucun sens sur un carreau seul). */
+function dessineCadrageUnique(){
+  const cv=document.getElementById('cvCadrage');
+  const img=IMGS.fresque[state.f.img];
+  if(!img||!img.width) return;
+  const lp=larg(cv), s=lp/img.width;
+  cv.width=lp; cv.height=Math.round(img.height*s);
+  const ctx=cv.getContext('2d');
+  ctx.drawImage(img,0,0,cv.width,cv.height);
+  const cr=cropRectUnique(); if(!cr) return;
+  ctx.fillStyle='rgba(38,37,31,.55)';
+  ctx.fillRect(0,0,cv.width,cr.y*s);
+  ctx.fillRect(0,(cr.y+cr.h)*s,cv.width,cv.height);
+  ctx.fillRect(0,cr.y*s,cr.x*s,cr.h*s);
+  ctx.fillRect((cr.x+cr.w)*s,cr.y*s,cv.width,cr.h*s);
+  ctx.strokeStyle='#fff'; ctx.lineWidth=2.5;
+  ctx.strokeRect(cr.x*s,cr.y*s,cr.w*s,cr.h*s);
+  const d=Math.round(effDpiUnique());
+  const b=document.getElementById('dpiBadge');
+  b.textContent=d+' dpi';
+  b.className='badge '+(d>=250?'ok':(d>=110?'warn':'alerte'));
+  document.getElementById('zoom').max=zoomMaxUnique().toFixed(2);
 }
 let drag=null;
 const cvC=document.getElementById('cvCadrage');
@@ -765,7 +819,10 @@ function setMode(m){
   document.getElementById('cModeF').classList.toggle('on',m==='fresque');
   document.getElementById('cModeA').classList.toggle('on',m==='azulejos');
   document.getElementById('cModeU').classList.toggle('on',m==='unique');
-  if(m==='unique') document.getElementById('tileLibre').value=state.tile;
+  if(m==='unique'){
+    document.getElementById('tileLibreW').value=state.tileW;
+    document.getElementById('tileLibreH').value=state.tileH;
+  }
   majNav();
 }
 function setTile(t){
@@ -774,9 +831,12 @@ function setTile(t){
   document.getElementById('t147').classList.toggle('on',t===147);
   rendu();
 }
-document.getElementById('tileLibre').addEventListener('input',e=>{
-  const v=clamp(Math.round(+e.target.value||0), 20, 300);
-  state.tile=v;
+document.getElementById('tileLibreW').addEventListener('input',e=>{
+  state.tileW=clamp(Math.round(+e.target.value||0), 20, 300);
+  rendu();
+});
+document.getElementById('tileLibreH').addEventListener('input',e=>{
+  state.tileH=clamp(Math.round(+e.target.value||0), 20, 300);
   rendu();
 });
 document.getElementById('joint').addEventListener('input',e=>{
@@ -796,10 +856,10 @@ function rendu(){
     const cf=document.getElementById('cvFormat');
     if(u){
       dessineCredenceUnique(cf, larg(cf));
-      const pageTest=state.tile+2*MARGE;
+      const pageTestW=state.tileW+2*MARGE, pageTestH=state.tileH+2*MARGE;
       document.getElementById('recapFormat').innerHTML=
-        '<div><span>Carreau</span><b>'+state.tile+' \u00d7 '+state.tile+' mm</b></div>'
-        +'<div><span>Plateau d\u2019impression</span><b>'+pageTest+' \u00d7 '+pageTest+' mm</b></div>';
+        '<div><span>Carreau</span><b>'+state.tileW+' \u00d7 '+state.tileH+' mm</b></div>'
+        +'<div><span>Plateau d\u2019impression</span><b>'+pageTestW+' \u00d7 '+pageTestH+' mm</b></div>';
     } else {
       dessineCredence(cf, larg(cf));
       document.getElementById('recapFormat').innerHTML=
@@ -814,24 +874,27 @@ function rendu(){
     document.getElementById('zoneFresque').style.display=f?'block':'none';
     document.getElementById('zoneAz').style.display=f?'none':'block';
     document.getElementById('titreCompo').textContent=u?'Cadre ton carreau de test':(f?'Compose ta fresque':'Compose ta mosa\u00efque');
+    document.getElementById('titreCadrage').textContent=u
+      ?'Cadrage \u2014 fais glisser l\u2019image pour choisir la zone \u00e0 imprimer.'
+      :'Cadrage \u2014 fais glisser l\u2019image. Les traits blancs montrent les joints.';
     document.getElementById('titreApercu').textContent=u?'Ton carreau de test':'Ta cr\u00e9dence, joints compris';
     document.getElementById('aideCompo').textContent=u
       ?'Choisis une image, puis cadre la partie qui deviendra ton carreau d\u2019essai.'
       :(f?'Choisis une image, puis cadre la partie qui deviendra ta cr\u00e9dence.'
         :'Choisis un motif, applique-le, fais-le pivoter. La composition na\u00eet des rotations.');
-    if(f) dessineCadrage(); else majGrille();
+    if(u) dessineCadrageUnique(); else if(f) dessineCadrage(); else majGrille();
     const cv=document.getElementById('cvVerif');
     let h='<div><span>Pr\u00e9nom</span><b>'+(state.prenom||'\u2014')+'</b></div>';
     if(u){
       dessineCredenceUnique(cv, larg(cv));
-      h+='<div><span>Carreau</span><b>'+(state.tile/10).toString().replace('.',',')+' \u00d7 '+(state.tile/10).toString().replace('.',',')+' cm</b></div>';
+      h+='<div><span>Carreau</span><b>'+(state.tileW/10).toString().replace('.',',')+' \u00d7 '+(state.tileH/10).toString().replace('.',',')+' cm</b></div>';
     } else {
       dessineCredence(cv, larg(cv));
       h+='<div><span>Carreaux</span><b>4 \u00d7 '+(state.tile/10).toString().replace('.',',')+' cm</b></div>'
         +'<div><span>Joint</span><b>'+state.joint+' mm</b></div>'
         +'<div><span>Cr\u00e9dence finie</span><b>'+W()+' \u00d7 '+W()+' mm</b></div>';
     }
-    if(f){ const d=Math.round(effDpi());
+    if(f){ const d=Math.round(u?effDpiUnique():effDpi());
       h+='<div><span>Qualit\u00e9 d\u2019impression</span><b>'+d+' dpi \u2014 '
         +(d>=250?'bonne':(d>=110?'correcte':'insuffisante'))+'</b></div>'; }
     document.getElementById('recap').innerHTML=h;
@@ -894,6 +957,7 @@ function nav(s){
 function recommencer(){
   if(!confirm('Retourner au début ?\n\nLa composition actuelle sera perdue. Le catalogue d’images est conservé.')) return;
   state.step=0; state.prenom=''; state.mode=null; state.tile=100; state.joint=3;
+  state.tileW=100; state.tileH=100;
   state.f={img:0, zoom:1, ox:.5, oy:.5};
   state.az=[{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0},{m:-1,rot:0}];
   state.brush=0;
@@ -903,7 +967,8 @@ function recommencer(){
   document.getElementById('cModeU').classList.remove('on');
   document.getElementById('t100').classList.add('on');
   document.getElementById('t147').classList.remove('on');
-  document.getElementById('tileLibre').value=100;
+  document.getElementById('tileLibreW').value=100;
+  document.getElementById('tileLibreH').value=100;
   document.getElementById('joint').value=3;
   document.getElementById('jointVal').textContent='3 mm';
   document.getElementById('zoom').value=1;
@@ -936,9 +1001,9 @@ function jpegBin(cv){
   for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
   return u;
 }
-function ecrisPDF(pageMm, content, images){
+function ecrisPDF(pageMm, content, images, pageHmm){
   images = images||[];
-  const pW=pageMm*K;
+  const pW=pageMm*K, pH=(pageHmm||pageMm)*K;
   const parts=[], off=[]; let pos=0;
   const push=s=>{
     if(typeof s==='string'){
@@ -954,7 +1019,7 @@ function ecrisPDF(pageMm, content, images){
   obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
   let xo='';
   for(let i=0;i<nImg;i++) xo+='/Im'+i+' '+(6+i)+' 0 R ';
-  obj(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pW.toFixed(3)+' '+pW.toFixed(3)+'] '
+  obj(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pW.toFixed(3)+' '+pH.toFixed(3)+'] '
     +'/Resources << /Font << /F1 5 0 R >> '+(nImg?'/XObject << '+xo+'>> ':'')+'>> /Contents 4 0 R >>');
   obj(4,'<< /Length '+content.length+' >>\nstream\n'+content+'endstream');
   obj(5,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
@@ -994,16 +1059,17 @@ function exportUV(){
   }
   dl(URL.createObjectURL(ecrisPDF(page, c, imgs)), slug()+'_impression_uv.pdf');
 }
-/* mode « Test machine » : un seul carreau sur sa propre petite page, même principe qu'exportUV(). */
+/* mode « Test machine » : un seul carreau (carré ou rectangulaire) sur sa propre
+   petite page, même principe qu'exportUV(). */
 function exportUVUnique(){
-  const page=state.tile+2*MARGE, pW=page*K;
-  const total=state.tile+2*DEBORD;
-  const cv=tuileUnique(Math.round(state.tile/25.4*DPI), DEBORD);
+  const pageW=state.tileW+2*MARGE, pageH=state.tileH+2*MARGE, pHpt=pageH*K;
+  const totalW=state.tileW+2*DEBORD, totalH=state.tileH+2*DEBORD;
+  const cv=tuileUnique(DPI/25.4, DEBORD);
   const imgs=[{data:jpegBin(cv), w:cv.width, h:cv.height}];
-  const x=(MARGE-DEBORD)*K, y=pW-(MARGE-DEBORD)*K-total*K;
-  const c='q '+(total*K).toFixed(3)+' 0 0 '+(total*K).toFixed(3)+' '
+  const x=(MARGE-DEBORD)*K, y=pHpt-(MARGE-DEBORD)*K-totalH*K;
+  const c='q '+(totalW*K).toFixed(3)+' 0 0 '+(totalH*K).toFixed(3)+' '
     +x.toFixed(3)+' '+y.toFixed(3)+' cm /Im0 Do Q\n';
-  dl(URL.createObjectURL(ecrisPDF(page, c, imgs)), slug()+'_impression_test.pdf');
+  dl(URL.createObjectURL(ecrisPDF(pageW, c, imgs, pageH)), slug()+'_impression_test.pdf');
 }
 
 const SEG={a:[[0,0],[6,0]],b:[[6,0],[6,5]],c:[[6,5],[6,10]],d:[[0,10],[6,10]],
@@ -1040,21 +1106,22 @@ function exportGabarit(){
    Trait plein = contour exact du carreau à poser. Trait pointillé = débord de
    l'image (2 mm), qui n'existe que dans le fichier d'impression, pas ici. */
 function exportGabaritUnique(){
-  const page=state.tile+2*MARGE, pW=page*K, t=state.tile, x=MARGE, y=MARGE;
-  const Y = mm => pW - mm*K;
+  const pageW=state.tileW+2*MARGE, pageH=state.tileH+2*MARGE, pHpt=pageH*K;
+  const tw=state.tileW, th=state.tileH, x=MARGE, y=MARGE;
+  const Y = mm => pHpt - mm*K;
   let c='0 G 0.8 w\n';
-  c+=(x*K).toFixed(2)+' '+Y(y+t).toFixed(2)+' '
-    +(t*K).toFixed(2)+' '+(t*K).toFixed(2)+' re S\n';
+  c+=(x*K).toFixed(2)+' '+Y(y+th).toFixed(2)+' '
+    +(tw*K).toFixed(2)+' '+(th*K).toFixed(2)+' re S\n';
   c+='[3 3] 0 d 0.4 w\n'
-    +((x-DEBORD)*K).toFixed(2)+' '+Y(y+t+DEBORD).toFixed(2)+' '
-    +((t+2*DEBORD)*K).toFixed(2)+' '+((t+2*DEBORD)*K).toFixed(2)+' re S\n'
+    +((x-DEBORD)*K).toFixed(2)+' '+Y(y+th+DEBORD).toFixed(2)+' '
+    +((tw+2*DEBORD)*K).toFixed(2)+' '+((th+2*DEBORD)*K).toFixed(2)+' re S\n'
     +'[] 0 d 0.8 w\n';
   c+='1.2 w 0 '+Y(0).toFixed(2)+' m '+(16*K).toFixed(2)+' '+Y(0).toFixed(2)+' l S\n'
     +'0 '+Y(0).toFixed(2)+' m 0 '+Y(16).toFixed(2)+' l S\n';
   c+='BT /F1 7 Tf '+(20*K).toFixed(2)+' '+Y(8).toFixed(2)+' Td (origine machine) Tj ET\n';
-  c+='BT /F1 6 Tf '+(MARGE*K).toFixed(2)+' '+Y(page-2).toFixed(2)+' Td '
-    +'(carreau '+t+' mm - debord '+DEBORD+' mm - trait plein = carreau) Tj ET\n';
-  dl(URL.createObjectURL(ecrisPDF(page, c, [])), 'gabarit_test_'+t+'mm.pdf');
+  c+='BT /F1 6 Tf '+(MARGE*K).toFixed(2)+' '+Y(pageH-2).toFixed(2)+' Td '
+    +'(carreau '+tw+' x '+th+' mm - debord '+DEBORD+' mm - trait plein = carreau) Tj ET\n';
+  dl(URL.createObjectURL(ecrisPDF(pageW, c, [], pageH)), 'gabarit_test_'+tw+'x'+th+'mm.pdf');
 }
 
 function chiffreSVG(n,x,y,col){
