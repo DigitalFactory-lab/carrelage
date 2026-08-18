@@ -96,6 +96,13 @@ input[type=text]:focus{outline:none; border-color:var(--mauve); box-shadow:0 0 0
 .carte canvas{width:100%; max-width:100px; aspect-ratio:1; border-radius:8px; display:block; margin-bottom:10px;}
 .carte b{display:block; font-size:17px; margin-bottom:3px; color:var(--text);}
 .carte span{font-size:13.5px; color:var(--muted); line-height:1.35; display:block;}
+/* carte « Test machine » : option utilitaire distincte, pas un 3e mode de composition
+   à poids égal — rangée horizontale pleine largeur sous les deux cartes principales. */
+.carte-util{grid-column:1 / -1; display:flex; align-items:center; gap:14px;}
+.carte-util .ic-wrap{flex:none; width:44px; height:44px; border-radius:10px; background:var(--wash);
+  display:flex; align-items:center; justify-content:center; color:var(--muted);}
+.carte-util .ic-wrap svg{width:21px; height:21px;}
+.carte-util.on .ic-wrap{background:var(--mauve); color:#fff;}
 
 .banque{display:flex; gap:10px; flex-wrap:wrap;}
 .banque button{width:74px; height:74px; padding:0; border:1.5px solid var(--border);
@@ -277,6 +284,10 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
       <canvas id="miniA" width="120" height="120"></canvas>
       <b>Mosaïque</b><span>Un motif par carreau, que tu tournes</span>
     </button>
+    <button class="carte carte-util" id="cModeU" onclick="setMode('unique')">
+      <span class="ic-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span>
+      <span><b>Test machine</b><span>Un seul carreau, sans joint — pour te familiariser avec l'imprimante</span></span>
+    </button>
   </div>
 </section>
 
@@ -290,12 +301,14 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
         <button id="t100" class="on" onclick="setTile(100)">10 × 10 cm<small>petit format</small></button>
         <button id="t147" onclick="setTile(147)">14,7 × 14,7 cm<small>grand format</small></button>
       </div>
-      <label>Largeur du joint</label>
-      <div class="rang">
-        <input type="range" id="joint" min="1" max="10" step="1" value="3">
-        <span class="val" id="jointVal">3 mm</span>
+      <div id="blocJoint">
+        <label>Largeur du joint</label>
+        <div class="rang">
+          <input type="range" id="joint" min="1" max="10" step="1" value="3">
+          <span class="val" id="jointVal">3 mm</span>
+        </div>
+        <p class="note">Joint fin : lignes discrètes, pose exigeante. Joint large : plus tolérant, plus graphique.</p>
       </div>
-      <p class="note">Joint fin : lignes discrètes, pose exigeante. Joint large : plus tolérant, plus graphique.</p>
     </div>
     <div class="col-right">
       <canvas class="zone" id="cvFormat" style="margin-top:14px"></canvas>
@@ -339,7 +352,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
       </div>
     </div>
     <div class="col-right">
-      <label>Ta crédence, joints compris</label>
+      <label id="titreApercu">Ta crédence, joints compris</label>
       <canvas class="zone" id="cvVerif"></canvas>
       <div class="recap" id="recap"></div>
     </div>
@@ -348,15 +361,20 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 
 <section id="s3">
   <h2>Tes fichiers de fabrication</h2>
-  <p class="aide">Chaque fichier part vers une machine. Le plan de pose t'accompagne au collage.</p>
-  <div class="dl">
+  <p class="aide" id="aideFichiers">Chaque fichier part vers une machine. Le plan de pose t'accompagne au collage.</p>
+  <div class="dl" id="dlNormal">
     <button onclick="exportUV()"><span class="num">1</span><span><b>Impression UV</b><small>PDF — l'image découpée en 4, avec 2 mm de débord</small></span></button>
     <button onclick="exportGabarit()"><span class="num">2</span><span><b>Gabarit de placement</b><small>PDF — même page, le tracé où poser les carreaux</small></span></button>
     <button onclick="exportLaser()"><span class="num">3</span><span><b>Découpe + gravure laser</b><small>SVG — contour (rouge = découpe) et emplacements numérotés (noir = gravure)</small></span></button>
     <button onclick="ouvrePlan()"><span class="num">4</span><span><b>Plan de pose</b><small>À suivre sur la tablette pendant la pose — étapes à cocher</small></span></button>
     <button onclick="ouvreVersa()"><span class="num">5</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher</small></span></button>
   </div>
-  <div class="enc"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
+  <div class="dl" id="dlUnique">
+    <button onclick="exportUVUnique()"><span class="num">1</span><span><b>Impression test</b><small>PDF — un seul carreau, avec 2 mm de débord</small></span></button>
+    <button onclick="ouvreVersa()"><span class="num">2</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher</small></span></button>
+  </div>
+  <div class="enc" id="encNormal"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
+  <div class="enc" id="encUnique"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>C'est un simple carreau de test, pas un morceau de la crédence finale — pas de plaque support ni de collage à prévoir. Vérifie juste le rendu (couleurs, netteté) une fois imprimé.</span></div>
   <button class="btn2" id="btnRecommencer" onclick="recommencer()" style="width:100%; justify-content:center; margin-top:18px; display:flex; align-items:center; gap:9px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Retour au début</button>
 </section>
 
@@ -562,11 +580,14 @@ function cropRect(){
   const cy=clamp(state.f.oy*img.height, c/2, img.height-c/2);
   return {x:cx-c/2, y:cy-c/2, w:c, h:c};
 }
-function effDpi(){ const c=cropRect(); return c ? c.w/W()*25.4 : 0; }
+/* largeur physique (mm) représentée par le cadrage : 2 carreaux + joint,
+   ou un seul carreau sans joint en mode « Test machine ». */
+const zoneMm = () => state.mode==='unique' ? state.tile : W();
+function effDpi(){ const c=cropRect(); return c ? c.w/zoneMm()*25.4 : 0; }
 function zoomMax(){
   const img=IMGS.fresque[state.f.img];
   if(!img||!img.width) return 2;
-  return clamp(Math.min(img.width,img.height)/W()*25.4/150, 1.01, 3);
+  return clamp(Math.min(img.width,img.height)/zoneMm()*25.4/150, 1.01, 3);
 }
 
 /* un carreau, avec débord optionnel en mm sur les 4 côtés */
@@ -610,6 +631,25 @@ function dessineCredence(cv, largPx){
     if(state.mode==='azulejos' && state.az[i].m<0) continue;
     ctx.drawImage(tuile(i,tp,0), x, y);
   }
+}
+/* mode « Test machine » : un seul carreau, sans joint — mêmes principes que
+   tuile()/dessineCredence() mais avec une seule tuile en référence d'échelle. */
+function tuileUnique(pxTile, bleedMm){
+  const b=bleedMm||0;
+  const total=state.tile+2*b;
+  const px=Math.max(1, Math.round(pxTile*total/state.tile));
+  const cv=document.createElement('canvas'); cv.width=px; cv.height=px;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,px,px);
+  const img=IMGS.fresque[state.f.img], cr=cropRect();
+  if(!cr) return cv;
+  const s=cr.w/state.tile;
+  ctx.drawImage(img, cr.x-b*s, cr.y-b*s, total*s, total*s, 0, 0, px, px);
+  return cv;
+}
+function dessineCredenceUnique(cv, largPx){
+  cv.width=largPx; cv.height=largPx;
+  cv.getContext('2d').drawImage(tuileUnique(largPx,0), 0, 0);
 }
 function larg(el){ return Math.min(680, (el.parentElement.clientWidth||640)-2); }
 
@@ -660,14 +700,16 @@ function dessineCadrage(){
   ctx.fillRect((cr.x+cr.w)*s,cr.y*s,cv.width,cr.h*s);
   ctx.strokeStyle='#fff'; ctx.lineWidth=2.5;
   ctx.strokeRect(cr.x*s,cr.y*s,cr.w*s,cr.h*s);
-  const pm=cr.w/W()*s;
-  ctx.lineWidth=Math.max(1.5, state.joint*pm);
-  ctx.strokeStyle='rgba(255,255,255,.9)';
-  const mid=(state.tile+state.joint/2)*pm;
-  ctx.beginPath();
-  ctx.moveTo(cr.x*s+mid, cr.y*s); ctx.lineTo(cr.x*s+mid, (cr.y+cr.h)*s);
-  ctx.moveTo(cr.x*s, cr.y*s+mid); ctx.lineTo((cr.x+cr.w)*s, cr.y*s+mid);
-  ctx.stroke();
+  if(state.mode!=='unique'){
+    const pm=cr.w/zoneMm()*s;
+    ctx.lineWidth=Math.max(1.5, state.joint*pm);
+    ctx.strokeStyle='rgba(255,255,255,.9)';
+    const mid=(state.tile+state.joint/2)*pm;
+    ctx.beginPath();
+    ctx.moveTo(cr.x*s+mid, cr.y*s); ctx.lineTo(cr.x*s+mid, (cr.y+cr.h)*s);
+    ctx.moveTo(cr.x*s, cr.y*s+mid); ctx.lineTo((cr.x+cr.w)*s, cr.y*s+mid);
+    ctx.stroke();
+  }
   const d=Math.round(effDpi());
   const b=document.getElementById('dpiBadge');
   b.textContent=d+' dpi';
@@ -698,6 +740,7 @@ function setMode(m){
   state.mode=m;
   document.getElementById('cModeF').classList.toggle('on',m==='fresque');
   document.getElementById('cModeA').classList.toggle('on',m==='azulejos');
+  document.getElementById('cModeU').classList.toggle('on',m==='unique');
   majNav();
 }
 function setTile(t){
@@ -715,34 +758,60 @@ document.getElementById('joint').addEventListener('input',e=>{
 /* ---------- rendu ---------- */
 function rendu(){
   minis();
+  const u=state.mode==='unique';
   if(state.step===1){
+    document.getElementById('blocJoint').style.display=u?'none':'block';
     const cf=document.getElementById('cvFormat');
-    dessineCredence(cf, larg(cf));
-    document.getElementById('recapFormat').innerHTML=
-      '<div><span>Crédence finie</span><b>'+W()+' × '+W()+' mm</b></div>'
-      +'<div><span>Plaque support</span><b>'+plaque()+' × '+plaque()+' mm</b></div>'
-      +'<div><span>Plateau d\u2019impression</span><b>'+pagePlateau()+' × '+pagePlateau()+' mm</b></div>'
-      +'<div><span>Surface de joint</span><b>'+(Math.round((1-4*state.tile*state.tile/(W()*W()))*1000)/10)+' %</b></div>';
+    if(u){
+      dessineCredenceUnique(cf, larg(cf));
+      const pageTest=state.tile+2*MARGE;
+      document.getElementById('recapFormat').innerHTML=
+        '<div><span>Carreau</span><b>'+state.tile+' \u00d7 '+state.tile+' mm</b></div>'
+        +'<div><span>Plateau d\u2019impression</span><b>'+pageTest+' \u00d7 '+pageTest+' mm</b></div>';
+    } else {
+      dessineCredence(cf, larg(cf));
+      document.getElementById('recapFormat').innerHTML=
+        '<div><span>Cr\u00e9dence finie</span><b>'+W()+' \u00d7 '+W()+' mm</b></div>'
+        +'<div><span>Plaque support</span><b>'+plaque()+' \u00d7 '+plaque()+' mm</b></div>'
+        +'<div><span>Plateau d\u2019impression</span><b>'+pagePlateau()+' \u00d7 '+pagePlateau()+' mm</b></div>'
+        +'<div><span>Surface de joint</span><b>'+(Math.round((1-4*state.tile*state.tile/(W()*W()))*1000)/10)+' %</b></div>';
+    }
   }
   if(state.step===2){
-    const f=state.mode==='fresque';
+    const f=state.mode==='fresque' || u;
     document.getElementById('zoneFresque').style.display=f?'block':'none';
     document.getElementById('zoneAz').style.display=f?'none':'block';
-    document.getElementById('titreCompo').textContent=f?'Compose ta fresque':'Compose ta mosaïque';
-    document.getElementById('aideCompo').textContent=f
-      ?'Choisis une image, puis cadre la partie qui deviendra ta crédence.'
-      :'Choisis un motif, applique-le, fais-le pivoter. La composition naît des rotations.';
+    document.getElementById('titreCompo').textContent=u?'Cadre ton carreau de test':(f?'Compose ta fresque':'Compose ta mosa\u00efque');
+    document.getElementById('titreApercu').textContent=u?'Ton carreau de test':'Ta cr\u00e9dence, joints compris';
+    document.getElementById('aideCompo').textContent=u
+      ?'Choisis une image, puis cadre la partie qui deviendra ton carreau d\u2019essai.'
+      :(f?'Choisis une image, puis cadre la partie qui deviendra ta cr\u00e9dence.'
+        :'Choisis un motif, applique-le, fais-le pivoter. La composition na\u00eet des rotations.');
     if(f) dessineCadrage(); else majGrille();
     const cv=document.getElementById('cvVerif');
-    dessineCredence(cv, larg(cv));
-    let h='<div><span>Prénom</span><b>'+(state.prenom||'—')+'</b></div>'
-      +'<div><span>Carreaux</span><b>4 × '+(state.tile/10).toString().replace('.',',')+' cm</b></div>'
-      +'<div><span>Joint</span><b>'+state.joint+' mm</b></div>'
-      +'<div><span>Crédence finie</span><b>'+W()+' × '+W()+' mm</b></div>';
+    let h='<div><span>Pr\u00e9nom</span><b>'+(state.prenom||'\u2014')+'</b></div>';
+    if(u){
+      dessineCredenceUnique(cv, larg(cv));
+      h+='<div><span>Carreau</span><b>'+(state.tile/10).toString().replace('.',',')+' \u00d7 '+(state.tile/10).toString().replace('.',',')+' cm</b></div>';
+    } else {
+      dessineCredence(cv, larg(cv));
+      h+='<div><span>Carreaux</span><b>4 \u00d7 '+(state.tile/10).toString().replace('.',',')+' cm</b></div>'
+        +'<div><span>Joint</span><b>'+state.joint+' mm</b></div>'
+        +'<div><span>Cr\u00e9dence finie</span><b>'+W()+' \u00d7 '+W()+' mm</b></div>';
+    }
     if(f){ const d=Math.round(effDpi());
-      h+='<div><span>Qualité d\u2019impression</span><b>'+d+' dpi — '
+      h+='<div><span>Qualit\u00e9 d\u2019impression</span><b>'+d+' dpi \u2014 '
         +(d>=250?'bonne':(d>=110?'correcte':'insuffisante'))+'</b></div>'; }
     document.getElementById('recap').innerHTML=h;
+  }
+  if(state.step===3){
+    document.getElementById('aideFichiers').textContent=u
+      ?'Un seul fichier à envoyer à l’imprimante — rien à assembler ensuite.'
+      :'Chaque fichier part vers une machine. Le plan de pose t’accompagne au collage.';
+    document.getElementById('dlNormal').style.display=u?'none':'grid';
+    document.getElementById('dlUnique').style.display=u?'grid':'none';
+    document.getElementById('encNormal').style.display=u?'none':'flex';
+    document.getElementById('encUnique').style.display=u?'flex':'none';
   }
   majNav();
 }
@@ -772,9 +841,9 @@ function majNav(){
   b.style.display=state.step<3?'block':'none';
   let ok=true;
   if(state.step===0) ok=!!state.mode;
-  if(state.step===2) ok = state.mode==='fresque'
-    ? IMGS.fresque.length>0
-    : state.az.every(c=>c.m>=0);
+  if(state.step===2) ok = state.mode==='azulejos'
+    ? state.az.every(c=>c.m>=0)
+    : IMGS.fresque.length>0;
   b.disabled=!ok;
   b.textContent=state.step===2?'Générer les fichiers':'Continuer';
 }
@@ -799,6 +868,7 @@ function recommencer(){
   document.getElementById('prenom').value='';
   document.getElementById('cModeF').classList.remove('on');
   document.getElementById('cModeA').classList.remove('on');
+  document.getElementById('cModeU').classList.remove('on');
   document.getElementById('t100').classList.add('on');
   document.getElementById('t147').classList.remove('on');
   document.getElementById('joint').value=3;
@@ -890,6 +960,17 @@ function exportUV(){
       +x.toFixed(3)+' '+y.toFixed(3)+' cm /Im'+i+' Do Q\n';
   }
   dl(URL.createObjectURL(ecrisPDF(page, c, imgs)), slug()+'_impression_uv.pdf');
+}
+/* mode « Test machine » : un seul carreau sur sa propre petite page, même principe qu'exportUV(). */
+function exportUVUnique(){
+  const page=state.tile+2*MARGE, pW=page*K;
+  const total=state.tile+2*DEBORD;
+  const cv=tuileUnique(Math.round(state.tile/25.4*DPI), DEBORD);
+  const imgs=[{data:jpegBin(cv), w:cv.width, h:cv.height}];
+  const x=(MARGE-DEBORD)*K, y=pW-(MARGE-DEBORD)*K-total*K;
+  const c='q '+(total*K).toFixed(3)+' 0 0 '+(total*K).toFixed(3)+' '
+    +x.toFixed(3)+' '+y.toFixed(3)+' cm /Im0 Do Q\n';
+  dl(URL.createObjectURL(ecrisPDF(page, c, imgs)), slug()+'_impression_test.pdf');
 }
 
 const SEG={a:[[0,0],[6,0]],b:[[6,0],[6,5]],c:[[6,5],[6,10]],d:[[0,10],[6,10]],
