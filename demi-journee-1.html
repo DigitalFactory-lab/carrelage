@@ -11,7 +11,7 @@
   .zc-hint{font-size:13.5px; color:var(--muted); margin:0 0 12px; display:flex; align-items:center; gap:7px;}
 </style>
 </head>
-<body>
+<body class="plein-ecran">
 <div class="wrap">
   <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--muted); text-decoration:none; margin-top:12px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour au sommaire du cours</a>
   <header>
@@ -25,109 +25,126 @@
     <a href="demi-journee-4.html">½ journée 04<small>À venir</small></a>
     <a href="atelier-credence.html">Exercice final<small>Atelier crédence</small></a>
   </nav>
-
-  <p class="surtitre">½ journée 01</p>
-  <h2>Découvrir l'impression 3D par le métier</h2>
-  <p>L'impression 3D n'est pas une technologie de laboratoire. Un carreleur belge s'en est servi pour fabriquer les outils et les finitions qu'il ne trouvait nulle part. Cette première demi-journée te fait découvrir comment une machine fabrique un objet, ce qu'elle sait faire, ce qu'elle ne sait pas faire, et comment on lui parle. Tu n'as rien à savoir avant de commencer : tu vas regarder, manipuler, et voir un objet sortir de la machine.</p>
-
-  <h3>Objectifs</h3>
-  <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
-  <ul class="objectifs">
-    <li>Reconnaître les principaux éléments d'une imprimante 3D et expliquer à quoi chacun sert.</li>
-    <li>Comprendre qu'il existe différents filaments et pourquoi on n'utilise pas le même selon la pièce à fabriquer.</li>
-    <li>Identifier le rôle du logiciel de tranchage entre un fichier 3D et une machine.</li>
-    <li>Citer des exemples d'objets imprimés en 3D utilisés dans le métier du carrelage.</li>
-  </ul>
-  <p class="aide">Le but n'est pas de devenir technicien, mais de comprendre le processus complet : du fichier numérique à la pièce physique.</p>
-
-  <!-- ===================== Section 1 ===================== -->
-  <h2>Section 1 — L'impression 3D au service du métier</h2>
-  <p class="souligne">Quelqu'un l'a déjà fait</p>
-  <p>TilX est une marque belge née sur le terrain. Elle a été créée de A à Z par un carreleur, avec l'idée de concevoir des outils pensés sur chantier pour répondre aux vrais besoins des pros — des produits que l'on ne trouve nulle part ailleurs. Les pièces sont conçues par impression 3D professionnelle, testées et validées sur chantier, et fabriquées dans des matériaux comme le PETG ou le PLA.</p>
-  <p>Quelques exemples de la gamme : une plaque de commande à carreler pour WC suspendus, une trappe de visite discrète pour salle de bains, une box encastrable pour rouleau WC à fixation aimantée, ou encore un gabarit de percement avec aspiration intégrée pour percer le carrelage sans poussière.</p>
-  <div class="enc mauve"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>La question à garder en tête toute la journée : chacun de ces objets est parti d'un agacement sur chantier. Lequel aurais-tu eu envie de résoudre ?</span></div>
-  <p><a class="btn2" href="https://carotools.com/69-tilx-design" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Voir la gamme — carotools.com/69-tilx-design</a></p>
-
-  <!-- ===================== Section 2 ===================== -->
-  <h2>Section 2 — Comment la machine fabrique</h2>
-  <p class="souligne">Fabrication additive</p>
-  <p><b>FDM</b> = Fused Deposition Modeling, modélisation par dépôt de matière fondue. C'est la technologie d'impression 3D la plus répandue et la plus accessible. Elle fabrique un objet réel en superposant des couches de plastique fondu, à partir d'un modèle numérique.</p>
-  <p>Le principe est l'inverse de ce que fait une meuleuse : au lieu d'enlever de la matière à un bloc, la machine en ajoute, couche après couche, uniquement là où c'est nécessaire.</p>
-  <div class="video-slot">
-    <iframe src="https://www.youtube-nocookie.com/embed/MZROg5rd6AM" title="Vidéo — le fonctionnement d'une imprimante FDM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-  </div>
-
-  <!-- ===================== Section 3 (zones cliquables) ===================== -->
-  <h2>Section 3 — Les parties d'une imprimante</h2>
-  <p class="zc-hint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/></svg>Touche chaque point du schéma pour découvrir à quoi sert cette partie.</p>
-  <div class="zone-clic">
-    <div class="zc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><b>Schéma de l'imprimante</b><small>assets/demi-journee-1/imprimante.jpg</small></div>
-    <img src="assets/demi-journee-1/imprimante.jpg" alt="Schéma de l'imprimante 3D" onerror="this.remove()">
-    <button class="hotspot" style="left:44%; top:33%" onclick="ouvrePoint('tete')">1</button>
-    <button class="hotspot" style="left:33%; top:68%" onclick="ouvrePoint('plateau')">2</button>
-    <button class="hotspot" style="left:66%; top:87%" onclick="ouvrePoint('ecran')">3</button>
-  </div>
-  <p class="zc-legende">1 — Tête d'impression · 2 — Plateau chauffant · 3 — Écran de contrôle</p>
-
-  <div class="enc danger">
-    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <div>
-      <b>Sécurité</b>
-      <ul>
-        <li>Ne touche jamais la buse ni le plateau. Plus de 200 °C : risque de brûlure.</li>
-        <li>En cas de bruit, d'odeur ou d'erreur, préviens le formateur. Mets en pause, ne force rien.</li>
-        <li>Reste attentif aux premières minutes d'impression. Si la pièce se décolle, il faut arrêter immédiatement.</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- ===================== Section 4 ===================== -->
-  <h2>Section 4 — Choisir le filament</h2>
-  <p>Le filament est la matière utilisée en impression 3D : un fil plastique chauffé puis déposé couche par couche. Le filament choisi dans le logiciel doit toujours correspondre à celui chargé dans l'imprimante.</p>
-  <table class="tbl">
-    <tr><th>Filament</th><th>Caractéristiques</th></tr>
-    <tr><td>PLA</td><td>Rigide et simple à imprimer.</td></tr>
-    <tr><td>PETG</td><td>Solide, légèrement flexible, résiste mieux à la chaleur.</td></tr>
-    <tr><td>TPU</td><td>Souple et élastique, revient en forme.</td></tr>
-  </table>
-  <p class="aide">Dans l'atelier, c'est toi qui choisis ton filament et qui le charges dans l'imprimante. Il existe bien d'autres filaments que ces trois-là — ce sont simplement ceux avec lesquels tu vas travailler aujourd'hui.</p>
-
-  <!-- ===================== Section 5 (zones cliquables) ===================== -->
-  <h2>Section 5 — Ton assistant d'impression</h2>
-  <p class="souligne">Bambu Studio</p>
-  <p class="zc-hint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/></svg>Touche un point de l'interface pour découvrir son rôle.</p>
-  <div class="zone-clic" style="aspect-ratio:1916/1029">
-    <div class="zc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><b>Interface Bambu Studio</b><small>assets/demi-journee-1/bambu-studio.jpg</small></div>
-    <img src="assets/demi-journee-1/bambu-studio.jpg" alt="Interface du logiciel Bambu Studio" onerror="this.remove()">
-    <button class="hotspot" style="left:83%; top:13%" onclick="ouvrePoint('tranchage')">?</button>
-    <button class="hotspot" style="left:76%; top:73%" onclick="ouvrePoint('espace')">1</button>
-    <button class="hotspot" style="left:9%; top:14%" onclick="ouvrePoint('imprimante')">2</button>
-    <button class="hotspot" style="left:9%; top:37%" onclick="ouvrePoint('filament')">3</button>
-    <button class="hotspot" style="left:83%; top:5%" onclick="ouvrePoint('preparer')">4</button>
-    <button class="hotspot" style="left:1%; top:5%" onclick="ouvrePoint('biblio')">5</button>
-  </div>
-  <p class="zc-legende">? — Qu'est-ce que le tranchage ? · 1 — Espace de travail · 2 — Choix de l'imprimante · 3 — Filament · 4 — Préparer le fichier · 5 — Bibliothèque</p>
-  <p class="aide">Les réglages du tranchage influencent la qualité, la vitesse et la solidité de l'impression. Dans cet atelier, tout est préconfiguré pour assurer un bon résultat.</p>
-
-  <!-- ===================== Section 6 ===================== -->
-  <h2>Section 6 — Imprime ta première pièce</h2>
-  <p>Pour terminer cette demi-journée, choisis un modèle sur MakerWorld — la bibliothèque accessible directement depuis Bambu Studio (point 5 de la section précédente) — et lance l'impression de ta toute première pièce.</p>
-  <div class="enc">
-    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <span>Astuce de recherche : cherche <b>« tile tools »</b> (en anglais) plutôt que « outils carrelage ». Les résultats sont bien plus nombreux et pertinents.</span>
-  </div>
-  <p class="zc-legende">Quelques exemples trouvés avec « tile tools » :</p>
-  <div class="exemples">
-    <img src="assets/demi-journee-1/exemple-1.jpg" alt="Cale de nivellement pour joint de carrelage">
-    <img src="assets/demi-journee-1/exemple-2.jpg" alt="Croisillon de nivellement en forme d'étoile pour carrelage mural">
-    <img src="assets/demi-journee-1/exemple-3.jpg" alt="Gabarit de mesure de diamètres pour perçage de carrelage">
-    <img src="assets/demi-journee-1/exemple-4.jpg" alt="Cale d'écartement utilisée avec une pince de serrage pour carrelage">
-    <img src="assets/demi-journee-1/exemple-5.jpg" alt="Croisillon de nivellement en croix pour carrelage">
-  </div>
-  <p class="aide">Choisis une pièce simple, utile pour ton métier. L'objectif de cette première impression : voir un objet réel sortir de la machine, du fichier numérique jusqu'au plastique.</p>
-
-  <div class="pied">Digital Factory · Forem · 2026</div>
 </div>
+
+<div class="slides" id="slides">
+
+  <section class="slide"><div class="wrap">
+    <p class="surtitre">½ journée 01</p>
+    <h2>Découvrir l'impression 3D par le métier</h2>
+    <p>L'impression 3D n'est pas une technologie de laboratoire. Un carreleur belge s'en est servi pour fabriquer les outils et les finitions qu'il ne trouvait nulle part. Cette première demi-journée te fait découvrir comment une machine fabrique un objet, ce qu'elle sait faire, ce qu'elle ne sait pas faire, et comment on lui parle. Tu n'as rien à savoir avant de commencer : tu vas regarder, manipuler, et voir un objet sortir de la machine.</p>
+
+    <h3>Objectifs</h3>
+    <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
+    <ul class="objectifs">
+      <li>Reconnaître les principaux éléments d'une imprimante 3D et expliquer à quoi chacun sert.</li>
+      <li>Comprendre qu'il existe différents filaments et pourquoi on n'utilise pas le même selon la pièce à fabriquer.</li>
+      <li>Identifier le rôle du logiciel de tranchage entre un fichier 3D et une machine.</li>
+      <li>Citer des exemples d'objets imprimés en 3D utilisés dans le métier du carrelage.</li>
+    </ul>
+    <p class="aide">Le but n'est pas de devenir technicien, mais de comprendre le processus complet : du fichier numérique à la pièce physique.</p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 1 — L'impression 3D au service du métier</h2>
+    <p class="souligne">Quelqu'un l'a déjà fait</p>
+    <p>TilX est une marque belge née sur le terrain. Elle a été créée de A à Z par un carreleur, avec l'idée de concevoir des outils pensés sur chantier pour répondre aux vrais besoins des pros — des produits que l'on ne trouve nulle part ailleurs. Les pièces sont conçues par impression 3D professionnelle, testées et validées sur chantier, et fabriquées dans des matériaux comme le PETG ou le PLA.</p>
+    <p>Quelques exemples de la gamme : une plaque de commande à carreler pour WC suspendus, une trappe de visite discrète pour salle de bains, une box encastrable pour rouleau WC à fixation aimantée, ou encore un gabarit de percement avec aspiration intégrée pour percer le carrelage sans poussière.</p>
+    <div class="enc mauve"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>La question à garder en tête toute la journée : chacun de ces objets est parti d'un agacement sur chantier. Lequel aurais-tu eu envie de résoudre ?</span></div>
+    <p><a class="btn2" href="https://carotools.com/69-tilx-design" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Voir la gamme — carotools.com/69-tilx-design</a></p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 2 — Comment la machine fabrique</h2>
+    <p class="souligne">Fabrication additive</p>
+    <p><b>FDM</b> = Fused Deposition Modeling, modélisation par dépôt de matière fondue. C'est la technologie d'impression 3D la plus répandue et la plus accessible. Elle fabrique un objet réel en superposant des couches de plastique fondu, à partir d'un modèle numérique.</p>
+    <p>Le principe est l'inverse de ce que fait une meuleuse : au lieu d'enlever de la matière à un bloc, la machine en ajoute, couche après couche, uniquement là où c'est nécessaire.</p>
+    <div class="video-slot">
+      <iframe src="https://www.youtube-nocookie.com/embed/MZROg5rd6AM" title="Vidéo — le fonctionnement d'une imprimante FDM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 3 — Les parties d'une imprimante</h2>
+    <p class="zc-hint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/></svg>Touche chaque point du schéma pour découvrir à quoi sert cette partie.</p>
+    <div class="zone-clic">
+      <div class="zc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><b>Schéma de l'imprimante</b><small>assets/demi-journee-1/imprimante.jpg</small></div>
+      <img src="assets/demi-journee-1/imprimante.jpg" alt="Schéma de l'imprimante 3D" onerror="this.remove()">
+      <button class="hotspot" style="left:44%; top:33%" onclick="ouvrePoint('tete')">1</button>
+      <button class="hotspot" style="left:33%; top:68%" onclick="ouvrePoint('plateau')">2</button>
+      <button class="hotspot" style="left:66%; top:87%" onclick="ouvrePoint('ecran')">3</button>
+    </div>
+    <p class="zc-legende">1 — Tête d'impression · 2 — Plateau chauffant · 3 — Écran de contrôle</p>
+
+    <div class="enc danger">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>
+        <b>Sécurité</b>
+        <ul>
+          <li>Ne touche jamais la buse ni le plateau. Plus de 200 °C : risque de brûlure.</li>
+          <li>En cas de bruit, d'odeur ou d'erreur, préviens le formateur. Mets en pause, ne force rien.</li>
+          <li>Reste attentif aux premières minutes d'impression. Si la pièce se décolle, il faut arrêter immédiatement.</li>
+        </ul>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 4 — Choisir le filament</h2>
+    <p>Le filament est la matière utilisée en impression 3D : un fil plastique chauffé puis déposé couche par couche. Le filament choisi dans le logiciel doit toujours correspondre à celui chargé dans l'imprimante.</p>
+    <table class="tbl">
+      <tr><th>Filament</th><th>Caractéristiques</th></tr>
+      <tr><td>PLA</td><td>Rigide et simple à imprimer.</td></tr>
+      <tr><td>PETG</td><td>Solide, légèrement flexible, résiste mieux à la chaleur.</td></tr>
+      <tr><td>TPU</td><td>Souple et élastique, revient en forme.</td></tr>
+    </table>
+    <p class="aide">Dans l'atelier, c'est toi qui choisis ton filament et qui le charges dans l'imprimante. Il existe bien d'autres filaments que ces trois-là — ce sont simplement ceux avec lesquels tu vas travailler aujourd'hui.</p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 5 — Ton assistant d'impression</h2>
+    <p class="souligne">Bambu Studio</p>
+    <p class="zc-hint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/></svg>Touche un point de l'interface pour découvrir son rôle.</p>
+    <div class="zone-clic" style="aspect-ratio:1916/1029">
+      <div class="zc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><b>Interface Bambu Studio</b><small>assets/demi-journee-1/bambu-studio.jpg</small></div>
+      <img src="assets/demi-journee-1/bambu-studio.jpg" alt="Interface du logiciel Bambu Studio" onerror="this.remove()">
+      <button class="hotspot" style="left:83%; top:13%" onclick="ouvrePoint('tranchage')">?</button>
+      <button class="hotspot" style="left:76%; top:73%" onclick="ouvrePoint('espace')">1</button>
+      <button class="hotspot" style="left:9%; top:14%" onclick="ouvrePoint('imprimante')">2</button>
+      <button class="hotspot" style="left:9%; top:37%" onclick="ouvrePoint('filament')">3</button>
+      <button class="hotspot" style="left:83%; top:5%" onclick="ouvrePoint('preparer')">4</button>
+      <button class="hotspot" style="left:1%; top:5%" onclick="ouvrePoint('biblio')">5</button>
+    </div>
+    <p class="zc-legende">? — Qu'est-ce que le tranchage ? · 1 — Espace de travail · 2 — Choix de l'imprimante · 3 — Filament · 4 — Préparer le fichier · 5 — Bibliothèque</p>
+    <p class="aide">Les réglages du tranchage influencent la qualité, la vitesse et la solidité de l'impression. Dans cet atelier, tout est préconfiguré pour assurer un bon résultat.</p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 6 — Imprime ta première pièce</h2>
+    <p>Pour terminer cette demi-journée, choisis un modèle sur MakerWorld — la bibliothèque accessible directement depuis Bambu Studio (point 5 de la section précédente) — et lance l'impression de ta toute première pièce.</p>
+    <div class="enc">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Astuce de recherche : cherche <b>« tile tools »</b> (en anglais) plutôt que « outils carrelage ». Les résultats sont bien plus nombreux et pertinents.</span>
+    </div>
+    <p class="zc-legende">Quelques exemples trouvés avec « tile tools » :</p>
+    <div class="exemples">
+      <img src="assets/demi-journee-1/exemple-1.jpg" alt="Cale de nivellement pour joint de carrelage">
+      <img src="assets/demi-journee-1/exemple-2.jpg" alt="Croisillon de nivellement en forme d'étoile pour carrelage mural">
+      <img src="assets/demi-journee-1/exemple-3.jpg" alt="Gabarit de mesure de diamètres pour perçage de carrelage">
+      <img src="assets/demi-journee-1/exemple-4.jpg" alt="Cale d'écartement utilisée avec une pince de serrage pour carrelage">
+      <img src="assets/demi-journee-1/exemple-5.jpg" alt="Croisillon de nivellement en croix pour carrelage">
+    </div>
+    <p class="aide">Choisis une pièce simple, utile pour ton métier. L'objectif de cette première impression : voir un objet réel sortir de la machine, du fichier numérique jusqu'au plastique.</p>
+    <div class="pied">Digital Factory · Forem · 2026</div>
+  </div></section>
+
+</div>
+
+<nav class="slide-nav" id="slideNav" aria-label="Navigation entre les sections">
+  <button class="fleche" id="slidePrev" aria-label="Section précédente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="points" id="slidePoints"></div>
+  <button class="fleche" id="slideNext" aria-label="Section suivante"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+</nav>
 
 <div class="modal" id="modalPoint">
   <div class="box">
@@ -156,6 +173,52 @@ function ouvrePoint(id){
   document.getElementById('modalPoint').classList.add('on');
 }
 function fermePoint(){ document.getElementById('modalPoint').classList.remove('on'); }
+
+(function(){
+  var slides = document.getElementById('slides');
+  var items = Array.prototype.slice.call(slides.children);
+  var pointsWrap = document.getElementById('slidePoints');
+  var prevBtn = document.getElementById('slidePrev');
+  var nextBtn = document.getElementById('slideNext');
+  var current = 0;
+
+  items.forEach(function(_, i){
+    var b = document.createElement('button');
+    b.className = 'pt';
+    b.setAttribute('aria-label', i === 0 ? 'Introduction' : 'Section ' + i);
+    b.addEventListener('click', function(){ va(i); });
+    pointsWrap.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(pointsWrap.children);
+
+  function maj(){
+    dots.forEach(function(d, i){ d.classList.toggle('on', i === current); });
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === items.length - 1;
+  }
+  function va(i){
+    current = Math.max(0, Math.min(items.length - 1, i));
+    slides.scrollTo({ left: current * slides.clientWidth, behavior: 'smooth' });
+    maj();
+  }
+  var scrollTimer;
+  slides.addEventListener('scroll', function(){
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function(){
+      current = Math.round(slides.scrollLeft / slides.clientWidth);
+      maj();
+    }, 80);
+  });
+  prevBtn.addEventListener('click', function(){ va(current - 1); });
+  nextBtn.addEventListener('click', function(){ va(current + 1); });
+  document.addEventListener('keydown', function(e){
+    if (document.getElementById('modalPoint').classList.contains('on')) return;
+    if (e.key === 'ArrowRight') va(current + 1);
+    if (e.key === 'ArrowLeft') va(current - 1);
+  });
+  window.addEventListener('resize', function(){ slides.scrollTo({ left: current * slides.clientWidth }); });
+  maj();
+})();
 </script>
 </body>
 </html>
