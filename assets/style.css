@@ -102,6 +102,10 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .tbl th{font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:700;}
 .tbl td:first-child{font-weight:700; white-space:nowrap;}
 
+/* ---- galerie d'exemples (photos, ex. modèles trouvés sur MakerWorld) ---- */
+.exemples{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin:14px 0 6px;}
+.exemples img{width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:var(--radius-md); border:1px solid var(--border);}
+
 /* ---- vidéo (emplacement, disparaît si le fichier est absent) ---- */
 .video-slot{position:relative; aspect-ratio:16/9; border-radius:var(--radius-md); border:1px solid var(--border);
   background:var(--grey-soft); overflow:hidden; margin:14px 0 22px;}
