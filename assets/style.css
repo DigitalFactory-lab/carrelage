@@ -109,6 +109,7 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .video-slot{position:relative; aspect-ratio:16/9; border-radius:var(--radius-md); border:1px solid var(--border);
   background:var(--grey-soft); overflow:hidden; margin:14px 0 22px;}
 .video-slot video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+.video-slot iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
 .video-slot:has(video) .hero-ph{display:none;}
 .video-slot .hero-ph{gap:9px;}
 
