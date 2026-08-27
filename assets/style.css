@@ -130,6 +130,21 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .exemples{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin:14px 0 6px;}
 .exemples img{width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:var(--radius-md); border:1px solid var(--border);}
 
+/* ---- duo image carrée + texte (ex. plan à modéliser + consigne) ---- */
+.duo{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:center; margin:14px 0 22px;}
+@media (max-width:680px){ .duo{grid-template-columns:1fr;} }
+.duo-img{position:relative; aspect-ratio:1; border-radius:var(--radius); border:1px solid var(--border);
+  background:var(--grey-soft); overflow:hidden;}
+.duo-img img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+.duo-img:not(:has(img)) .duo-ph{display:flex;}
+.duo-img:has(img) .duo-ph{display:none;}
+.duo-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:7px; text-align:center; padding:16px; color:var(--muted);}
+.duo-ph svg{width:30px; height:30px; color:#B7B4CC;}
+.duo-ph b{font-size:14px; font-weight:600; color:#8B889F;}
+.duo-ph small{font-size:11.5px; color:#A6A3B8; font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+.duo-txt p:last-child{margin-bottom:0;}
+
 /* ---- vidéo (emplacement, disparaît si le fichier est absent) ---- */
 .video-slot{position:relative; aspect-ratio:16/9; border-radius:var(--radius-md); border:1px solid var(--border);
   background:var(--grey-soft); overflow:hidden; margin:14px 0 22px;}
