@@ -42,7 +42,7 @@ a{color:var(--mauve-dark);}
    contenu est plus haut que l'écran (ex. schéma + galerie), elle défile
    verticalement toute seule, sans casser le swipe horizontal. */
 body.plein-ecran{height:100vh; height:100dvh; overflow:hidden; display:flex; flex-direction:column;}
-body.plein-ecran > .wrap{flex:none;}
+body.plein-ecran > .wrap{flex:none; width:100%;}
 .slides{flex:1 1 auto; min-height:0; display:flex; overflow-x:auto; overflow-y:hidden;
   scroll-snap-type:x mandatory; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
 .slides::-webkit-scrollbar{display:none;}
