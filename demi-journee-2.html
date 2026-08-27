@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>½ journée 02 — Modélise ton premier outil</title>
+<title>½ journée 02 — Modéliser son propre outil</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23E7E6EF'/%3E%3Crect x='5' y='5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3Crect x='17.5' y='5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='5' y='17.5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='17.5' y='17.5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
 <style>
@@ -26,47 +26,110 @@
   </nav>
 
   <p class="surtitre">½ journée 02</p>
-  <h2>Modélise ton premier outil</h2>
-  <p>Hier, tu as imprimé un objet déjà conçu par quelqu'un d'autre. Aujourd'hui, tu vas le concevoir toi-même. Cette demi-journée est ta première approche de la modélisation 3D — pas pour devenir dessinateur technique, mais pour ouvrir le champ des possibles : ce que tu peux imaginer, tu peux le fabriquer.</p>
+  <h2>Modéliser son propre outil</h2>
+  <p class="aide">Première approche de la conception 3D</p>
+  <p>En 01, tu as imprimé un objet conçu par quelqu'un d'autre. Cette fois, tu vas le dessiner toi-même. Nous allons modéliser un outil ensemble, étape par étape, et chacun le personnalisera à sa façon. À la fin, tu repars avec une pièce qui n'existe nulle part ailleurs : la tienne. Tu pourras la tester pendant ta formation de carreleur, ou simplement la garder.</p>
+  <p>Personne n'est censé savoir modéliser en arrivant. L'objectif est de voir ce que c'est, de se faire une idée — et de savoir si ça te plaît ou pas.</p>
 
   <h3>Objectifs</h3>
   <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
   <ul class="objectifs">
-    <li>Te repérer dans un premier logiciel de modélisation 3D, Fusion.</li>
-    <li>Modéliser une pièce simple à partir d'un plan donné, étape par étape.</li>
-    <li>Personnaliser cette pièce pour en faire un objet qui te ressemble.</li>
-    <li>Comprendre que la modélisation ouvre bien plus de possibilités qu'un catalogue de modèles tout faits.</li>
+    <li>Te repérer dans l'interface de Fusion : plan de travail, esquisse, volume.</li>
+    <li>Suivre les étapes de base d'une modélisation : dessiner un contour, lui donner des cotes, l'extruder en volume.</li>
+    <li>Modifier une pièce existante pour l'adapter à ton besoin.</li>
+    <li>Exporter ton modèle et le préparer à l'impression.</li>
+    <li>Dire ce que tu as aimé ou pas dans la démarche de conception.</li>
   </ul>
-  <p class="aide">À la clé : un outil personnalisé que tu pourras utiliser et tester pendant ta formation de carreleur — ou garder en souvenir.</p>
 
   <!-- ===================== Section 1 ===================== -->
-  <h2>Section 1 — Ton logiciel de modélisation</h2>
-  <p class="souligne">Fusion</p>
-  <p>Fusion (Autodesk) est un logiciel de conception 3D professionnel, utilisé aussi bien par des industriels que par des makers et des artisans. C'est l'outil que tu vas utiliser aujourd'hui pour dessiner ta pièce, avant de l'envoyer à l'imprimante — le même principe que Bambu Studio hier, mais une étape plus tôt dans la chaîne : ici, c'est toi qui crées la forme, pas seulement qui la prépares.</p>
-  <div class="enc">
-    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11Z"/></svg>
-    <span>Fusion reste gratuit en <b>usage personnel non commercial</b> : abonnement de 3 ans, renouvelable, pour un usage privé générant moins de 1000 $ de revenus par an. De quoi continuer à modéliser chez toi après l'atelier.</span>
-  </div>
-  <p><a class="btn2" href="https://www.autodesk.com/products/fusion-360/personal" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Télécharger Fusion pour un usage personnel</a></p>
+  <h2>Section 1 — Concevoir plutôt que télécharger</h2>
+  <p>En 01, tu as cherché un objet dans une bibliothèque. Ça marche bien tant que quelqu'un a déjà eu ton problème. Mais dès que ton besoin est particulier — une dimension précise, une forme adaptée à un chantier —, il n'y a plus rien à télécharger.</p>
+  <p>C'est exactement le chemin qu'a suivi TilX : des outils créés parce qu'ils n'existaient pas.</p>
+  <p>Aujourd'hui tu passes de l'autre côté : tu dessines.</p>
 
   <!-- ===================== Section 2 ===================== -->
-  <h2>Section 2 — Activité guidée</h2>
-  <p class="souligne">« J'aime ou j'aime pas »</p>
-  <p>On modélise tous ensemble, une étape à la fois. Le formateur te donne un plan à suivre : à toi de le reproduire dans Fusion, puis de le transformer à ta façon — garde ce qui te plaît, change ce qui ne te plaît pas.</p>
-  <div class="duo">
+  <h2>Section 2 — Le logiciel</h2>
+  <p>Autodesk Fusion est un logiciel de conception 3D professionnel, utilisé dans l'industrie comme par les makers. Il fonctionne avec le cloud : tes fichiers sont sauvegardés sur ton compte, tu les retrouves depuis n'importe quel ordinateur.</p>
+  <div class="enc">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3v.5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-.5c0-1 .4-1.7 1-2.3A7 7 0 0 0 12 2Z"/></svg>
+    <span><b>Bon à savoir — l'utiliser chez toi.</b> Autodesk propose une licence personnelle gratuite, destinée aux projets non commerciaux et à la fabrication à domicile. Elle donne accès à la modélisation complète et à l'export des fichiers pour l'impression 3D. Il faut créer un compte Autodesk, confirmer que ton usage est non commercial, et la renouveler à échéance.</span>
+  </div>
+  <p class="aide">Les conditions évoluent régulièrement — vérifie sur le <a href="https://www.autodesk.com/products/fusion-360/personal" target="_blank" rel="noopener">site officiel d'Autodesk</a>. Si tu commences à vendre ce que tu produis, la licence personnelle ne suffit plus.</p>
+
+  <!-- ===================== Section 3 ===================== -->
+  <h2>Section 3 — Modélisation guidée</h2>
+  <p class="souligne">On dessine ensemble</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:0 0 16px">
     <div class="duo-img">
       <div class="duo-ph">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <b>Plan à modéliser</b>
+        <b>Vue cotée</b>
         <small>assets/demi-journee-2/plan.jpg</small>
       </div>
-      <img src="assets/demi-journee-2/plan.jpg" alt="Plan de la pièce à modéliser ensemble" onerror="this.remove()">
+      <img src="assets/demi-journee-2/plan.jpg" alt="Vue cotée de la pièce à modéliser" onerror="this.remove()">
     </div>
-    <div class="duo-txt">
-      <p>Ce plan sert de base commune : mêmes cotes, même point de départ pour tout le monde. Une fois la forme reproduite, c'est à toi de jouer — épaisseur, poignée, motif, taille : la pièce que tu imprimeras à la fin sera la tienne.</p>
-      <p class="aide">Pas de bonne ou de mauvaise version. L'objectif n'est pas la précision, c'est de comprendre comment une forme se construit dans le logiciel.</p>
+    <div class="duo-img">
+      <div class="duo-ph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <b>Photo de la pièce finie</b>
+        <small>assets/demi-journee-2/piece-finie.jpg</small>
+      </div>
+      <img src="assets/demi-journee-2/piece-finie.jpg" alt="Photo de la pièce imprimée une fois terminée" onerror="this.remove()">
     </div>
   </div>
+  <p>Nous modélisons cette pièce ensemble, étape par étape. Tu suis à ton rythme, et tu lèves la main dès que tu décroches — c'est normal de décrocher, personne ne modélise du premier coup.</p>
+  <p class="aide">Les trois gestes de base que tu vas répéter :</p>
+  <table class="tbl">
+    <tr><th>Geste</th><th>Ce que ça fait</th></tr>
+    <tr><td>L'esquisse</td><td>Dessiner un contour à plat, comme sur une feuille.</td></tr>
+    <tr><td>Les cotes</td><td>Donner les dimensions exactes au dessin.</td></tr>
+    <tr><td>L'extrusion</td><td>Transformer le dessin plat en volume.</td></tr>
+  </table>
+  <p class="aide">Tout le reste n'est qu'une répétition de ces trois gestes.</p>
+
+  <!-- ===================== Section 4 ===================== -->
+  <h2>Section 4 — Ta personnalisation</h2>
+  <p class="souligne">Rends-le tien</p>
+  <p>La pièce de base est la même pour tous. Ce que tu en fais ensuite t'appartient :</p>
+  <ul>
+    <li>Grave ton prénom ou tes initiales sur une face</li>
+    <li>Ajuste une dimension à ta main ou à ton besoin</li>
+    <li>Ajoute un trou de suspension pour l'accrocher à la ceinture</li>
+    <li>Choisis ton matériau : rigide, résistant ou souple</li>
+  </ul>
+  <div class="enc danger">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span>Pour le texte gravé : avec la buse utilisée dans l'atelier, les lettres trop petites ou trop fines ne sortiront pas. Prévois des caractères d'une hauteur suffisante et une profondeur de gravure d'environ 1 mm. Le formateur valide avant le tranchage.</span>
+  </div>
+
+  <!-- ===================== Section 5 ===================== -->
+  <h2>Section 5 — De Fusion à la machine</h2>
+  <p>Exporte ton modèle au format STL ou 3MF, ouvre-le dans Bambu Studio, choisis la machine correspondant à ton filament, tranche et lance.</p>
+  <p class="aide">Tu connais déjà cette étape — la différence, c'est que cette fois le fichier vient de toi.</p>
+
+  <!-- ===================== Section 6 ===================== -->
+  <h2>Section 6 — J'aime / j'aime pas</h2>
+  <p class="souligne">Qu'est-ce que tu en as pensé ?</p>
+  <p class="aide">Il n'y a pas de bonne réponse. Ce retour sert à comprendre ce qui te correspond.</p>
+
+  <h3>Ce que j'ai aimé</h3>
+  <ul>
+    <li>Voir la forme apparaître à l'écran ?</li>
+    <li>Travailler avec des dimensions précises ?</li>
+    <li>Personnaliser ma pièce ?</li>
+    <li>Le fait que l'objet vienne de moi ?</li>
+  </ul>
+
+  <h3>Ce qui m'a posé problème</h3>
+  <ul>
+    <li>Me repérer dans le logiciel ?</li>
+    <li>Suivre le rythme du groupe ?</li>
+    <li>Passer du plan au dessin 3D ?</li>
+    <li>Trop d'étapes à retenir ?</li>
+  </ul>
+
+  <h3>Et maintenant ?</h3>
+  <p class="aide">Tu sais ce qu'est la modélisation. Tu peux la reprendre chez toi avec la licence gratuite, ou t'en tenir aux bibliothèques existantes. Les deux sont des réponses valables.</p>
 
   <div class="pied">Digital Factory · Forem · 2026</div>
 </div>
