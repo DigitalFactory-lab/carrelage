@@ -157,6 +157,18 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .duo-ph small{font-size:11.5px; color:#A6A3B8; font-family:ui-monospace,"SF Mono",Menlo,monospace;}
 .duo-txt p:last-child{margin-bottom:0;}
 
+/* ---- bannière large 3:1 (ex. photo sous un bloc de texte) ---- */
+.banniere{position:relative; aspect-ratio:3/1; border-radius:var(--radius); border:1px solid var(--border);
+  background:var(--grey-soft); overflow:hidden; margin:14px 0 22px;}
+.banniere img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+.banniere:not(:has(img)) .banniere-ph{display:flex;}
+.banniere:has(img) .banniere-ph{display:none;}
+.banniere-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:7px; text-align:center; padding:16px; color:var(--muted);}
+.banniere-ph svg{width:30px; height:30px; color:#B7B4CC;}
+.banniere-ph b{font-size:14px; font-weight:600; color:#8B889F;}
+.banniere-ph small{font-size:11.5px; color:#A6A3B8; font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+
 /* ---- vidéo (emplacement, disparaît si le fichier est absent) ---- */
 .video-slot{position:relative; aspect-ratio:16/9; border-radius:var(--radius-md); border:1px solid var(--border);
   background:var(--grey-soft); overflow:hidden; margin:14px 0 22px;}
