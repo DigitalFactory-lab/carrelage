@@ -233,7 +233,6 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .carte-cours.avenir{opacity:.55; cursor:default;}
 .carte-cours .num{display:inline-block; font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
   color:var(--mauve); background:var(--mauve-soft); border-radius:999px; padding:4px 12px; margin-bottom:10px;}
-.carte-cours.exercice .num{color:var(--fuchsia); background:var(--fuchsia-soft);}
 .carte-cours h3{margin:0 0 6px; font-size:19px;}
 .carte-cours p{margin:0; color:var(--muted); font-size:14.5px;}
 

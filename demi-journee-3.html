@@ -2,12 +2,16 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>½ journée 03 — Contenu à venir</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>½ journée 03 — Imprimer sur le carreau</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23E7E6EF'/%3E%3Crect x='5' y='5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3Crect x='17.5' y='5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='5' y='17.5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='17.5' y='17.5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  .souligne{color:var(--mauve-dark); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.05em; margin:0 0 12px;}
+  .swatch{display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:7px; vertical-align:-1px; flex:none;}
+</style>
 </head>
-<body>
+<body class="plein-ecran">
 <div class="wrap">
   <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--muted); text-decoration:none; margin-top:12px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour au sommaire du cours</a>
   <header>
@@ -17,16 +21,142 @@
   <nav class="tabs">
     <a href="demi-journee-1.html">½ journée 01<small>Impression 3D</small></a>
     <a href="demi-journee-2.html">½ journée 02<small>Modélisation</small></a>
-    <a href="demi-journee-3.html" class="on">½ journée 03<small>À venir</small></a>
+    <a href="demi-journee-3.html" class="on">½ journée 03<small>Impression UV</small></a>
     <a href="demi-journee-4.html">½ journée 04<small>À venir</small></a>
-    <a href="atelier-credence.html">Exercice final<small>Atelier crédence</small></a>
   </nav>
-
-  <p class="surtitre">½ journée 03</p>
-  <h2>Contenu à venir</h2>
-  <p class="aide">Cette demi-journée sera ajoutée prochainement.</p>
-
-  <div class="pied">Digital Factory · Forem · 2026</div>
 </div>
+
+<div class="slides" id="slides">
+
+  <section class="slide"><div class="wrap">
+    <p class="surtitre">½ journée 03</p>
+    <h2>Imprimer sur le carreau</h2>
+    <p class="aide">L'impression UV et le lancement du projet final</p>
+    <p>Une troisième machine, une troisième façon de fabriquer : cette fois, l'image se dépose directement sur le carreau. Tu vas d'abord faire un essai sur un carreau de test, puis lancer ton projet : une crédence de 4 carreaux que tu composeras toi-même et que tu assembleras la prochaine fois.</p>
+
+    <h3>Objectifs</h3>
+    <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
+    <ul class="objectifs">
+      <li>Décrire le principe de l'impression UV sur support rigide.</li>
+      <li>Utiliser un gabarit de placement pour positionner un carreau sur le plateau.</li>
+      <li>Juger ce qui rend bien ou mal une fois imprimé sur céramique.</li>
+      <li>Composer une crédence en choisissant format, joint, image et cadrage.</li>
+      <li>Comprendre comment le laser interprète un fichier pour découper et graver.</li>
+    </ul>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 1 — Imprimer sur du dur</h2>
+    <p class="souligne">L'impression UV</p>
+    <p>Jusqu'ici, tu as ajouté de la matière en volume, puis tu vas voir le laser en enlever. L'impression UV fait autre chose encore : elle dépose une encre en surface, sur un support rigide, et la durcit immédiatement avec une lumière ultraviolette.</p>
+    <p>L'encre ne pénètre pas dans le carreau — elle se fixe dessus. C'est ce qui permet d'imprimer sur de la céramique, du verre, du métal ou du bois.</p>
+    <div class="enc danger">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>
+        <b>Sécurité et manipulation</b>
+        <ul>
+          <li>Ne pas approcher les mains du chariot pendant l'impression.</li>
+          <li>Le carreau doit être propre et sec avant la pose sur le plateau.</li>
+          <li>Ne rien déplacer sur le plateau une fois l'impression lancée.</li>
+        </ul>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 2 — Ton carreau test</h2>
+    <p class="souligne">Un essai avant le vrai</p>
+    <p>Avant de composer ta crédence, tu fais un essai. L'objectif n'est pas d'obtenir un joli carreau, c'est de voir ce que la machine sait faire avec une image.</p>
+    <p class="aide">Tu prépares ton impression ici :</p>
+    <p><a class="btn2" href="gabarit-impression.html"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Impression UV — préparer un support</a></p>
+    <p>Tu entres les dimensions de ton carreau, tu choisis et cadres ton image.</p>
+    <p class="aide">Le débord de 2 mm est une sécurité : il n'existe que dans le fichier d'impression, jamais dans le gabarit. Si ton carreau est légèrement décalé, l'image le couvre quand même jusqu'au bord.</p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 3 — Regarder le résultat</h2>
+    <p class="souligne">Qu'est-ce qui rend bien sur un carreau ?</p>
+    <p>Fais circuler les carreaux du groupe. C'est en les comparant qu'on apprend.</p>
+    <ul>
+      <li>Les couleurs vives et les aplats ressortent-ils bien ?</li>
+      <li>Les détails fins sont-ils encore lisibles ?</li>
+      <li>Le contraste est-il suffisant ?</li>
+      <li>Qu'est-ce qui a perdu de sa force par rapport à l'écran ?</li>
+      <li>Comment l'encre réagit-elle si tu grattes légèrement du bout de l'ongle ?</li>
+    </ul>
+    <p class="aide">Retiens ce que tu observes. Dans dix minutes, tu choisis l'image de ta crédence — et une image qui rend mal sur un carreau rendra mal sur quatre.</p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 4 — Ton projet : la crédence</h2>
+    <p class="souligne">De l'écran au carreau</p>
+    <p>Tu vas composer une crédence de 4 carreaux. Elle sera imprimée sur de vrais carreaux, puis collée sur une plaque découpée au laser. Tu l'assembleras à la prochaine séance.</p>
+    <p class="aide">L'appli te guide en quatre étapes : départ, carreaux, motif, fichiers.</p>
+    <p><a class="btn2" href="atelier-credence.html"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Atelier Crédence</a></p>
+    <p class="aide">Ce que tu as observé sur ton carreau test vaut pour ta crédence. Une image qui rend mal sur un carreau rendra mal sur quatre.</p>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Section 5 — La découpe laser</h2>
+    <p class="souligne">Comment le laser fabrique ta base</p>
+    <p>Le laser suit un tracé défini dans un fichier. Il chauffe le matériau jusqu'à le vaporiser localement, exactement là où passe la ligne.</p>
+
+    <h3>La couleur dit quoi faire</h3>
+    <p>La machine ne devine rien : elle exécute l'action associée à chaque couleur. Sur ce type de machine, la convention est généralement celle-ci — mais ce n'est pas une règle universelle. Selon le logiciel ou l'atelier, les couleurs peuvent être associées à d'autres actions. C'est toujours à vérifier avant de lancer.</p>
+    <ul>
+      <li><span class="swatch" style="background:#DC2626"></span><b>Rouge</b> → découpe — le contour extérieur de ta base.</li>
+      <li><span class="swatch" style="background:#1B1A2B"></span><b>Noir</b> → gravure — les emplacements numérotés qui te guideront au collage.</li>
+    </ul>
+    <div class="duo-img" style="aspect-ratio:16/10; max-width:560px">
+      <div class="duo-ph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <b>Le fichier de la base dans Rubi</b>
+        <small>assets/demi-journee-3/laser-fichier.jpg</small>
+      </div>
+      <img src="assets/demi-journee-3/laser-fichier.jpg" alt="Fichier de la base ouvert dans Rubi : contour en rouge, emplacements numérotés en noir" onerror="this.remove()">
+    </div>
+    <p class="zc-legende">Le fichier de la base ouvert dans Rubi : contour en rouge, emplacements numérotés en noir. On voit d'un coup d'œil ce qui sera coupé et ce qui sera marqué.</p>
+
+    <h3>La puissance et la vitesse décident du reste</h3>
+    <p>Ce sont les deux mêmes réglages qui font toute la différence entre couper et marquer.</p>
+    <ul>
+      <li><b>Découper</b> : forte puissance, vitesse lente. Le laser doit avoir le temps de traverser la matière.</li>
+      <li><b>Graver</b> : puissance réduite, vitesse rapide. Il ne fait que marquer la surface.</li>
+    </ul>
+    <p class="aide">Ces réglages dépendent aussi du matériau et de son épaisseur. Ils sont préréglés pour l'atelier.</p>
+    <div class="duo-img" style="aspect-ratio:16/10; max-width:560px">
+      <div class="duo-ph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <b>Le panneau des réglages</b>
+        <small>assets/demi-journee-3/laser-reglages.jpg</small>
+      </div>
+      <img src="assets/demi-journee-3/laser-reglages.jpg" alt="Panneau des réglages laser : lignes découpe et gravure avec leurs valeurs de puissance et de vitesse" onerror="this.remove()">
+    </div>
+    <p class="zc-legende">Le panneau des réglages : les deux lignes découpe et gravure, avec leurs valeurs de puissance et de vitesse. Le contraste entre les deux se lit directement.</p>
+
+    <div class="enc danger">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>
+        <b>Sécurité</b>
+        <ul>
+          <li>Ne jamais ouvrir le capot pendant la découpe.</li>
+          <li>Attendre la fin du cycle complet avant de manipuler la plaque.</li>
+          <li>Ne pas déplacer la tête du laser manuellement.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="aide">La procédure complète est disponible dans l'application.</p>
+    <div class="pied">Digital Factory · Forem · 2026</div>
+  </div></section>
+
+</div>
+
+<nav class="slide-nav" id="slideNav" aria-label="Navigation entre les sections">
+  <button class="fleche" id="slidePrev" aria-label="Section précédente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="points" id="slidePoints"></div>
+  <button class="fleche" id="slideNext" aria-label="Section suivante"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+</nav>
+
+<script src="assets/slides.js"></script>
 </body>
 </html>
