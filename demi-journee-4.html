@@ -2,12 +2,12 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>½ journée 04 — Contenu à venir</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>½ journée 04 — Finalisation du projet</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23E7E6EF'/%3E%3Crect x='5' y='5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3Crect x='17.5' y='5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='5' y='17.5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='17.5' y='17.5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="plein-ecran">
 <div class="wrap">
   <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--muted); text-decoration:none; margin-top:12px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour au sommaire du cours</a>
   <header>
@@ -18,14 +18,49 @@
     <a href="demi-journee-1.html">½ journée 01<small>Impression 3D</small></a>
     <a href="demi-journee-2.html">½ journée 02<small>Modélisation</small></a>
     <a href="demi-journee-3.html">½ journée 03<small>Impression UV</small></a>
-    <a href="demi-journee-4.html" class="on">½ journée 04<small>À venir</small></a>
+    <a href="demi-journee-4.html" class="on">½ journée 04<small>Finalisation</small></a>
   </nav>
-
-  <p class="surtitre">½ journée 04</p>
-  <h2>Contenu à venir</h2>
-  <p class="aide">Cette demi-journée sera ajoutée prochainement.</p>
-
-  <div class="pied">Digital Factory · Forem · 2026</div>
 </div>
+
+<div class="slides" id="slides">
+
+  <section class="slide"><div class="wrap">
+    <p class="surtitre">½ journée 04</p>
+    <h2>Finalisation du projet</h2>
+    <p class="aide">Imprimer, découper, coller, présenter</p>
+    <p>Dernière séance. Tu imprimes tes carreaux, tu découpes ta base, tu assembles ta crédence et tu la présentes. Chacun avance à son rythme : les machines passent un par un, et tu poursuis sur ton collage dès que tes pièces sont prêtes.</p>
+    <p class="aide">Les procédures complètes sont disponibles dans l'application.</p>
+
+    <h3>Objectifs</h3>
+    <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
+    <ul class="objectifs">
+      <li>Conduire une fabrication de bout en bout, du fichier à l'objet fini.</li>
+      <li>Suivre un plan de pose et utiliser un repérage gravé.</li>
+      <li>Analyser l'écart entre ce que tu avais prévu à l'écran et ce que tu obtiens.</li>
+    </ul>
+  </div></section>
+
+  <section class="slide"><div class="wrap">
+    <h2>Présenter ta crédence</h2>
+    <p>Prends ta crédence en main et compare-la à ce que tu avais à l'écran.</p>
+    <ul>
+      <li>Le motif tombe-t-il juste au passage des joints ?</li>
+      <li>Le débord de 2 mm a-t-il servi ?</li>
+      <li>Ton choix de joint rend-il ce que tu imaginais ?</li>
+      <li>Qu'est-ce que tu ferais autrement ?</li>
+    </ul>
+    <p class="aide">Puis présente-la au groupe : ce que tu as choisi, pourquoi, et ce qui s'est passé entre l'écran et le carreau.</p>
+    <div class="pied">Digital Factory · Forem · 2026</div>
+  </div></section>
+
+</div>
+
+<nav class="slide-nav" id="slideNav" aria-label="Navigation entre les sections">
+  <button class="fleche" id="slidePrev" aria-label="Section précédente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="points" id="slidePoints"></div>
+  <button class="fleche" id="slideNext" aria-label="Section suivante"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+</nav>
+
+<script src="assets/slides.js"></script>
 </body>
 </html>
