@@ -157,7 +157,7 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .exemples img:hover{border-color:var(--mauve); transform:translateY(-2px);}
 
 /* ---- duo image carrée + texte (ex. plan à modéliser + consigne) ---- */
-.duo{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:center; margin:14px 0 22px;}
+.duo{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; margin:14px 0 22px;}
 @media (max-width:680px){ .duo{grid-template-columns:1fr;} }
 .duo-img{position:relative; aspect-ratio:1; border-radius:var(--radius); border:1px solid var(--border);
   background:var(--grey-soft); overflow:hidden;}
