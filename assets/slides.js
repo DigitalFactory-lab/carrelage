@@ -28,6 +28,12 @@
     pointsWrap.appendChild(b);
 
     if (crumbsWrap){
+      if (i > 0){
+        var sep = document.createElement('span');
+        sep.className = 'sep';
+        sep.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>';
+        crumbsWrap.appendChild(sep);
+      }
       var c = document.createElement('button');
       c.className = 'crumb';
       c.textContent = labelFor(item, i);
@@ -36,7 +42,7 @@
     }
   });
   var dots = Array.prototype.slice.call(pointsWrap.children);
-  var crumbs = crumbsWrap ? Array.prototype.slice.call(crumbsWrap.children) : [];
+  var crumbs = crumbsWrap ? Array.prototype.slice.call(crumbsWrap.querySelectorAll('.crumb')) : [];
 
   function maj(){
     dots.forEach(function(d, i){ d.classList.toggle('on', i === current); });
