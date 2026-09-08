@@ -151,8 +151,10 @@ label{display:block; font-weight:700; font-size:15px; margin:18px 0 6px; color:v
 .tbl td:first-child{font-weight:700; white-space:nowrap;}
 
 /* ---- galerie d'exemples (photos, ex. modèles trouvés sur MakerWorld) ---- */
-.exemples{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin:14px 0 6px;}
-.exemples img{width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:var(--radius-md); border:1px solid var(--border);}
+.exemples{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:14px 0 6px;}
+.exemples img{width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:var(--radius-md);
+  border:1px solid var(--border); cursor:zoom-in; transition:border-color .15s, transform .15s;}
+.exemples img:hover{border-color:var(--mauve); transform:translateY(-2px);}
 
 /* ---- duo image carrée + texte (ex. plan à modéliser + consigne) ---- */
 .duo{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:center; margin:14px 0 22px;}

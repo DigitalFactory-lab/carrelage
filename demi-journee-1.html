@@ -33,17 +33,29 @@
   <section class="slide"><div class="wrap">
     <p class="surtitre">½ journée 01</p>
     <h2>Découvrir l'impression 3D par le métier</h2>
-    <p>L'impression 3D n'est pas une technologie de laboratoire. Un carreleur belge s'en est servi pour fabriquer les outils et les finitions qu'il ne trouvait nulle part. Cette première demi-journée te fait découvrir comment une machine fabrique un objet, ce qu'elle sait faire, ce qu'elle ne sait pas faire, et comment on lui parle. Tu n'as rien à savoir avant de commencer : tu vas regarder, manipuler, et voir un objet sortir de la machine.</p>
+    <div class="duo" style="align-items:start">
+      <div>
+        <p>L'impression 3D n'est pas réservée aux laboratoires : un carreleur belge s'en sert pour fabriquer les outils qu'il ne trouvait nulle part. Aujourd'hui, tu regardes, tu manipules, et tu vois un objet sortir de la machine.</p>
 
-    <h3>Objectifs</h3>
-    <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
-    <ul class="objectifs">
-      <li>Reconnaître les principaux éléments d'une imprimante 3D et expliquer à quoi chacun sert.</li>
-      <li>Comprendre qu'il existe différents filaments et pourquoi on n'utilise pas le même selon la pièce à fabriquer.</li>
-      <li>Identifier le rôle du logiciel de tranchage entre un fichier 3D et une machine.</li>
-      <li>Citer des exemples d'objets imprimés en 3D utilisés dans le métier du carrelage.</li>
-    </ul>
-    <p class="aide">Le but n'est pas de devenir technicien, mais de comprendre le processus complet : du fichier numérique à la pièce physique.</p>
+        <h3>Objectifs</h3>
+        <p class="aide">À la fin de cette demi-journée, tu seras capable de :</p>
+        <ul class="objectifs">
+          <li>Reconnaître les éléments d'une imprimante 3D et leur rôle.</li>
+          <li>Comprendre pourquoi le filament change selon la pièce.</li>
+          <li>Identifier le rôle du logiciel de tranchage.</li>
+          <li>Citer des objets imprimés utiles au carrelage.</li>
+        </ul>
+        <p class="aide">Pas pour devenir technicien : pour comprendre le trajet du fichier à la pièce.</p>
+      </div>
+      <div class="duo-img" style="width:100%; max-width:440px">
+        <div class="duo-ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <b>Outil imprimé en 3D</b>
+          <small>assets/demi-journee-1/outil-nivellement.jpg</small>
+        </div>
+        <img src="assets/demi-journee-1/outil-nivellement.jpg" alt="Cale de nivellement orange imprimée en 3D pour la pose de carrelage" onerror="this.remove()">
+      </div>
+    </div>
   </div></section>
 
   <section class="slide"><div class="wrap">
@@ -163,7 +175,7 @@
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <span>Astuce de recherche : cherche <b>« tile tools »</b> (en anglais) plutôt que « outils carrelage ». Les résultats sont bien plus nombreux et pertinents.</span>
     </div>
-    <p class="zc-legende">Quelques exemples trouvés avec « tile tools » :</p>
+    <p class="zc-legende">Quelques exemples trouvés avec « tile tools » — touche une image pour l'agrandir :</p>
     <div class="exemples">
       <img src="assets/demi-journee-1/exemple-1.jpg" alt="Cale de nivellement pour joint de carrelage">
       <img src="assets/demi-journee-1/exemple-2.jpg" alt="Croisillon de nivellement en forme d'étoile pour carrelage mural">
@@ -182,6 +194,11 @@
   <div class="points" id="slidePoints"></div>
   <button class="fleche" id="slideNext" aria-label="Section suivante"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
 </nav>
+
+<div class="lightbox" id="lightbox" onclick="fermeZoom()">
+  <button class="lightbox-close" onclick="fermeZoom()" aria-label="Fermer l'image">&times;</button>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+</div>
 
 <div class="modal" id="modalPoint">
   <div class="box">
@@ -211,6 +228,20 @@ function ouvrePoint(id){
   document.getElementById('modalPoint').classList.add('on');
 }
 function fermePoint(){ document.getElementById('modalPoint').classList.remove('on'); }
+
+/* Agrandissement des photos de la galerie (Section 6) */
+function fermeZoom(){ document.getElementById('lightbox').classList.remove('on'); }
+document.querySelectorAll('.exemples img').forEach(function(im){
+  im.addEventListener('click', function(){
+    var grand = document.getElementById('lightboxImg');
+    grand.src = im.src;
+    grand.alt = im.alt;
+    document.getElementById('lightbox').classList.add('on');
+  });
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') fermeZoom();
+});
 </script>
 <script src="assets/slides.js"></script>
 </body>

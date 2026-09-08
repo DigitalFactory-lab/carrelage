@@ -66,8 +66,8 @@
   prevBtn.addEventListener('click', function(){ va(current - 1); });
   nextBtn.addEventListener('click', function(){ va(current + 1); });
   document.addEventListener('keydown', function(e){
-    var modal = document.getElementById('modalPoint');
-    if (modal && modal.classList.contains('on')) return;
+    // une modale ou une image agrandie est ouverte : elle prend les touches
+    if (document.querySelector('.modal.on, .lightbox.on')) return;
     if (e.key === 'ArrowRight') va(current + 1);
     if (e.key === 'ArrowLeft') va(current - 1);
   });
