@@ -1,26 +1,46 @@
 /* Navigation des pages "plein écran" (body.plein-ecran + #slides) :
-   flèches, points, clavier. Partagé par les demi-journées qui utilisent
-   ce format d'écrans défilables horizontalement. */
+   flèches, points, chemin de sections cliquable, clavier. Partagé par
+   les demi-journées qui utilisent ce format d'écrans défilables
+   horizontalement. */
 (function(){
   var slides = document.getElementById('slides');
   if (!slides) return;
   var items = Array.prototype.slice.call(slides.children);
   var pointsWrap = document.getElementById('slidePoints');
+  var crumbsWrap = document.getElementById('slideCrumbs');
   var prevBtn = document.getElementById('slidePrev');
   var nextBtn = document.getElementById('slideNext');
   var current = 0;
 
-  items.forEach(function(_, i){
+  function labelFor(item, i){
+    var h2 = item.querySelector('h2');
+    if (!h2) return i === 0 ? 'Intro' : 'Section ' + i;
+    var m = h2.textContent.match(/^Section\s+\d+/i);
+    if (m) return m[0];
+    return i === 0 ? 'Intro' : h2.textContent.trim();
+  }
+
+  items.forEach(function(item, i){
     var b = document.createElement('button');
     b.className = 'pt';
     b.setAttribute('aria-label', i === 0 ? 'Introduction' : 'Section ' + i);
     b.addEventListener('click', function(){ va(i); });
     pointsWrap.appendChild(b);
+
+    if (crumbsWrap){
+      var c = document.createElement('button');
+      c.className = 'crumb';
+      c.textContent = labelFor(item, i);
+      c.addEventListener('click', function(){ va(i); });
+      crumbsWrap.appendChild(c);
+    }
   });
   var dots = Array.prototype.slice.call(pointsWrap.children);
+  var crumbs = crumbsWrap ? Array.prototype.slice.call(crumbsWrap.children) : [];
 
   function maj(){
     dots.forEach(function(d, i){ d.classList.toggle('on', i === current); });
+    crumbs.forEach(function(c, i){ c.classList.toggle('on', i === current); });
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === items.length - 1;
   }

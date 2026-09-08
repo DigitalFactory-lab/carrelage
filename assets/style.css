@@ -62,6 +62,16 @@ body.plein-ecran > .wrap{flex:none; width:100%;}
 .slide-nav .pt{width:7px; height:7px; border-radius:4px; background:var(--border);}
 .slide-nav .pt.on{background:var(--mauve); width:20px;}
 
+/* ---- chemin de sections cliquable, sous les onglets ½ journée ---- */
+.slide-crumbs{display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  margin:14px 0 0; padding-bottom:2px;}
+.slide-crumbs::-webkit-scrollbar{display:none;}
+.slide-crumbs .crumb{flex:none; border:1px solid var(--border); background:var(--card); color:var(--muted);
+  font-size:12.5px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer; white-space:nowrap;
+  font-family:var(--font); transition:border-color .15s, color .15s, background .15s;}
+.slide-crumbs .crumb:hover{border-color:var(--muted); color:var(--text);}
+.slide-crumbs .crumb.on{background:var(--mauve); border-color:var(--mauve); color:#fff;}
+
 /* ---- en-tête ---- */
 header{padding:12px 0 20px;}
 h1{font-size:19px; font-weight:800; margin:0; letter-spacing:-0.01em; color:var(--text);}
