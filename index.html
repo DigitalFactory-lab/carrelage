@@ -1,62 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>De l'idée à l'objet — Digital Factory</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23E7E6EF'/%3E%3Crect x='5' y='5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3Crect x='17.5' y='5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='5' y='17.5' width='9.5' height='9.5' rx='2' fill='%23fff'/%3E%3Crect x='17.5' y='17.5' width='9.5' height='9.5' rx='2' fill='%235B41B0'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css">
-<style>
-  h1{font-size:38px; letter-spacing:-0.02em; line-height:1.08;}
-  h1 small{display:block; font-size:20px; font-weight:600; color:var(--muted); margin-top:8px; text-transform:uppercase; letter-spacing:.03em;}
-  @media (min-width:640px){ h1{font-size:52px;} h1 small{font-size:24px;} }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Proposition graphique pour le parcours carreleur de la Digital Factory.">
+  <title>De l'idée à l'objet — Digital Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/home.css">
+  <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
-<div class="wrap">
-  <div class="hero" style="margin-bottom:28px">
-    <div class="hero-media">
-      <div class="hero-ph">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <b>Image de couverture</b>
-        <small>assets/cover.jpg — idéal 21:9, ≥ 1800×770px</small>
-      </div>
-      <img src="assets/cover.jpg" alt="Lettrage « Digital Factory » en carreaux de faïence" loading="eager" onerror="this.remove()">
-    </div>
-  </div>
+  <div class="noise" aria-hidden="true"></div>
 
-  <header>
-    <p class="surtitre">Digital Factory · Forem</p>
-    <h1>De l'idée à l'objet<small>orienté métier carreleur</small></h1>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Retour en haut">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span>Digital Factory <b>· Forem</b></span>
+    </a>
+    <a class="course-link" href="#programme">Le parcours <span aria-hidden="true">↓</span></a>
   </header>
 
-  <p class="aide">Un parcours en quatre demi-journées pour découvrir l'impression 3D à travers des cas concrets du métier, jusqu'à la fabrication d'une crédence en carreaux, de l'écran au carreau.</p>
+  <main id="top">
+    <section class="hero" aria-labelledby="main-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span></span> Parcours découverte · 4 demi-journées</p>
+        <h1 id="main-title">De l'idée<br><em>à l'objet</em></h1>
+        <p class="orientation">Orienté métier <strong>carreleur</strong></p>
+        <p class="intro">Un parcours en quatre demi-journées pour découvrir l'impression 3D à travers des cas concrets du métier, jusqu'à la fabrication d'une crédence en carreaux, de l'écran au carreau.</p>
+        <a class="discover" href="#programme">
+          <span>Découvrir le programme</span>
+          <span class="discover-icon" aria-hidden="true">↘</span>
+        </a>
+      </div>
 
-  <h2 class="sr-only">Programme du cours</h2>
-  <div class="cartes-cours">
-    <a class="carte-cours" href="demi-journee-1.html">
-      <span class="num">½ journée 01</span>
-      <h3>Découvrir l'impression 3D par le métier</h3>
-      <p>Comment une machine fabrique un objet, ce qu'elle sait faire, ce qu'elle ne sait pas faire, et comment on lui parle.</p>
-    </a>
-    <a class="carte-cours" href="demi-journee-2.html">
-      <span class="num">½ journée 02</span>
-      <h3>Modéliser son propre outil</h3>
-      <p>Première approche de la conception 3D : modélise un outil avec Fusion, personnalise-le, puis imprime ta propre pièce.</p>
-    </a>
-    <a class="carte-cours" href="demi-journee-3.html">
-      <span class="num">½ journée 03</span>
-      <h3>Imprimer sur le carreau</h3>
-      <p>L'impression UV et le lancement du projet final : un essai sur carreau de test, puis la composition de ta crédence.</p>
-    </a>
-    <a class="carte-cours" href="demi-journee-4.html">
-      <span class="num">½ journée 04</span>
-      <h3>Finalisation du projet</h3>
-      <p>Imprimer, découper, coller, présenter : tu termines ta crédence de bout en bout et tu la présentes au groupe.</p>
-    </a>
-  </div>
+      <div class="hero-visual reveal" aria-label="Lettrage Digital Factory composé sur des carreaux">
+        <div class="tile-index" aria-hidden="true"><span>01</span><span>→</span><span>04</span></div>
+        <img src="assets/cover.jpg" alt="Lettrage Digital Factory en carreaux de faïence">
+        <div class="image-caption" aria-hidden="true">
+          <span>Écran</span><i></i><span>Objet</span>
+        </div>
+      </div>
+    </section>
 
-  <div class="pied">Digital Factory · Forem · 2026</div>
-</div>
+    <section class="programme" id="programme" aria-labelledby="programme-title">
+      <div class="section-heading reveal">
+        <p class="section-number">01 — 04</p>
+        <h2 id="programme-title">Programme<br>du cours</h2>
+        <p>Quatre étapes. Une progression concrète, de la découverte jusqu'à la présentation du projet final.</p>
+      </div>
+
+      <div class="course-list">
+        <a class="course-card reveal" href="demi-journee-1.html">
+          <span class="card-number">01</span>
+          <div class="card-copy">
+            <span class="duration">½ journée</span>
+            <h3>Découvrir l'impression 3D par le métier</h3>
+            <p>Comment une machine fabrique un objet, ce qu'elle sait faire, ce qu'elle ne sait pas faire, et comment on lui parle.</p>
+          </div>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="course-card reveal" href="demi-journee-2.html">
+          <span class="card-number">02</span>
+          <div class="card-copy">
+            <span class="duration">½ journée</span>
+            <h3>Modéliser son propre outil</h3>
+            <p>Première approche de la conception 3D : modélise un outil avec Fusion, personnalise-le, puis imprime ta propre pièce.</p>
+          </div>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="course-card reveal" href="demi-journee-3.html">
+          <span class="card-number">03</span>
+          <div class="card-copy">
+            <span class="duration">½ journée</span>
+            <h3>Imprimer sur le carreau</h3>
+            <p>L'impression UV et le lancement du projet final : un essai sur carreau de test, puis la composition de ta crédence.</p>
+          </div>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="course-card reveal" href="demi-journee-4.html">
+          <span class="card-number">04</span>
+          <div class="card-copy">
+            <span class="duration">½ journée</span>
+            <h3>Finalisation du projet</h3>
+            <p>Imprimer, découper, coller, présenter : tu termines ta crédence de bout en bout et tu la présentes au groupe.</p>
+          </div>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Digital Factory · Forem · 2026</span>
+    <a href="#top">Retour en haut ↑</a>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+  </script>
 </body>
 </html>
