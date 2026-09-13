@@ -220,6 +220,8 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
   overflow:hidden; border:1px solid var(--border); background:var(--grey-soft);}
 .pc-media:not(:has(img)){aspect-ratio:16/9;}
 .pc-media img{display:block; width:100%; height:auto; max-height:420px; object-fit:contain; cursor:zoom-in;}
+.pc-media.pc-media-native{width:auto; max-width:100%; align-self:flex-start;}
+.pc-media.pc-media-native img{width:auto; max-width:100%; max-height:none; cursor:default;}
 .pc-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:5px; text-align:center; padding:10px; color:var(--muted);}
 .pc-media:has(img) .pc-ph{display:none;}
@@ -1061,15 +1063,18 @@ function etapesRubis(){
     {texte:'Dans Ruby, ouvre le fichier <b>SVG</b> généré pour l’exercice. Contrôle le visuel importé : dimensions, orientation, éléments manquants et couleurs. Optimise ensuite son placement sur le panneau. Si plusieurs pièces sont présentes, utilise le <b>nesting</b> pour limiter les chutes de matière.',
       medias:[{s:'4a', label:'Ouvrir le fichier SVG'},{s:'4b', label:'Contrôler le visuel importé'}]},
     {texte:'Associe chaque couleur à l’effet prévu : <b>rouge</b> pour le contour extérieur, <b>bleu</b> pour les quatre carrés et les chiffres, <b>noir</b> pour les flèches. Tu définis ainsi les opérations que le laser exécutera. Vérifie l’affectation <b>Découpe</b> ou <b>Gravure</b> de chaque couleur, puis clique sur <b>Créer la tâche</b>.',
-      media:'5'},
+      media:{s:'5', native:true, zoom:false}},
     {texte:'Dans l’écran de préparation, place la tâche sur la zone réellement occupée par le panneau en bois. Repère le marqueur qui indique la <b>position actuelle de la tête laser</b>. Pour modifier un effet, clique sur sa couleur. Réglages validés pour cet exercice : <b>noir — Graver, puissance 70 %, vitesse 100 %, 500 dpi</b> ; <b>bleu — Découpe, puissance 100 %, vitesse 10 %, 5 000 Hz</b> ; <b>rouge — Découpe, puissance 100 %, vitesse 1 %, 5 000 Hz</b>. Ces valeurs concernent uniquement <b>cet exercice et ce matériau</b> ; elles ne constituent pas des réglages universels.', cle:true,
       medias:[{s:'6a', label:'Positionner la tâche sur le panneau'},{s:'6b', label:'Repérer la position de la tête laser'},{s:'6c', label:'Contrôler les paramètres de chaque effet'}]},
-    {texte:'Contrôle une dernière fois le placement, les couleurs et les paramètres, puis clique sur <b>Envoyer au laser</b>.', media:'7'},
+    {texte:'Contrôle une dernière fois le placement, les couleurs et les paramètres, puis clique sur <b>Envoyer au laser</b>.', media:{s:'7', native:true, zoom:false}},
     {texte:'Lorsque la machine est prête et le capot fermé, démarre le travail avec le bouton <b>Démarrer</b> dans Ruby ou sur la machine. Reste à proximité et surveille la découpe pendant tout le cycle.', media:'8'}
   ];
 }
 function ouvreRubis(){
-  const uneImage=s=>'<span class="pc-media"><span class="pc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><small>assets/rubis/etape-'+s+'.jpg</small></span><img src="assets/rubis/etape-'+s+'.jpg" alt="Illustration de l’étape '+s+' de la procédure Rubis" onerror="this.remove()"></span>';
+  const uneImage=media=>{
+    const m=typeof media==='string'?{s:media}:media;
+    return '<span class="pc-media'+(m.native?' pc-media-native':'')+'"><span class="pc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><small>assets/rubis/etape-'+m.s+'.jpg</small></span><img src="assets/rubis/etape-'+m.s+'.jpg" alt="Illustration de l’étape '+m.s+' de la procédure Rubis"'+(m.zoom===false?' data-no-zoom="true"':'')+' onerror="this.remove()"></span>';
+  };
   const check=etapesRubis().map((e,i)=>{
     const n=i+1;
     const media=e.medias
@@ -1102,7 +1107,7 @@ function fermeImageZoom(){
   document.getElementById('imageZoomImg').src='';
 }
 document.addEventListener('click',e=>{
-  const img=e.target.closest('.pc-media img');
+  const img=e.target.closest('.pc-media img:not([data-no-zoom])');
   if(img) ouvreImageZoom(img);
 });
 document.addEventListener('keydown',e=>{
