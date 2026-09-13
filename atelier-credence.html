@@ -219,7 +219,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .pc-media{display:block; position:relative; width:100%; margin:0; max-width:420px; border-radius:var(--radius-md);
   overflow:hidden; border:1px solid var(--border); background:var(--grey-soft);}
 .pc-media:not(:has(img)){aspect-ratio:16/9;}
-.pc-media img{display:block; width:100%; height:auto; max-height:420px; object-fit:contain;}
+.pc-media img{display:block; width:100%; height:auto; max-height:420px; object-fit:contain; cursor:zoom-in;}
 .pc-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:5px; text-align:center; padding:10px; color:var(--muted);}
 .pc-media:has(img) .pc-ph{display:none;}
@@ -230,6 +230,15 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 .pc-media-row .pc-media-item{display:block; flex:1 1 160px; max-width:280px;}
 .pc-media-row .pc-media{max-width:none;}
 .pc-media-cap{display:block; font-size:12px; font-weight:600; color:var(--muted); margin-top:6px; text-align:center;}
+
+/* agrandissement des captures des procédures */
+.image-zoom{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center;
+  padding:24px; background:rgba(15,15,25,.9); cursor:zoom-out;}
+.image-zoom.on{display:flex;}
+.image-zoom img{display:block; max-width:96vw; max-height:92vh; width:auto; height:auto;
+  object-fit:contain; border-radius:var(--radius-md); background:#fff; cursor:default;}
+.image-zoom-close{position:absolute; top:14px; right:18px; width:46px; height:46px; border:1px solid rgba(255,255,255,.35);
+  border-radius:50%; background:rgba(0,0,0,.45); color:#fff; font-size:30px; line-height:1; cursor:pointer;}
 
 /* pictogrammes SVG (Lucide-style) — jamais d'emoji, cf. charte Cyber */
 .ic{width:1.15em; height:1.15em; display:inline-block; vertical-align:-.2em; flex:none;}
@@ -417,6 +426,11 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
       <button class="btn2" onclick="fermeRubis()">Fermer</button>
     </div>
   </div>
+</div>
+
+<div class="image-zoom" id="imageZoom" onclick="fermeImageZoom()" role="dialog" aria-modal="true" aria-label="Image agrandie">
+  <button class="image-zoom-close" onclick="fermeImageZoom()" aria-label="Fermer l’image agrandie">&times;</button>
+  <img id="imageZoomImg" src="" alt="" onclick="event.stopPropagation()">
 </div>
 
 <div class="nav">
@@ -1075,6 +1089,25 @@ function ouvreRubis(){
   document.getElementById('modalRubis').classList.add('on');
 }
 function fermeRubis(){ document.getElementById('modalRubis').classList.remove('on'); }
+
+/* Zoom commun aux captures des procédures Rubis et VersaWorks */
+function ouvreImageZoom(img){
+  const grand=document.getElementById('imageZoomImg');
+  grand.src=img.src;
+  grand.alt=img.alt;
+  document.getElementById('imageZoom').classList.add('on');
+}
+function fermeImageZoom(){
+  document.getElementById('imageZoom').classList.remove('on');
+  document.getElementById('imageZoomImg').src='';
+}
+document.addEventListener('click',e=>{
+  const img=e.target.closest('.pc-media img');
+  if(img) ouvreImageZoom(img);
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && document.getElementById('imageZoom').classList.contains('on')) fermeImageZoom();
+});
 
 window.addEventListener('resize',rendu);
 document.getElementById('prenom').addEventListener('input',majNav);
