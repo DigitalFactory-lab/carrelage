@@ -241,7 +241,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 </head>
 <body class="tool-page tool-credence">
 <div class="wrap">
-<a class="tool-back" href="demi-journee-3.html">← Retour à la demi-journée 03</a>
+<a class="tool-back" href="demi-journee-3.html#section-3">← Retour à la demi-journée 03 — section 3</a>
 <header>
   <h1>Atelier Crédence<small>Digital Factory — parcours carreleurs</small></h1>
 </header>
@@ -359,9 +359,10 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
   <div class="dl" id="dlNormal">
     <button onclick="exportUV()"><span class="num">1</span><span><b>Impression UV</b><small>PDF — l'image découpée en 4, avec 2 mm de débord</small></span></button>
     <button onclick="exportGabarit()"><span class="num">2</span><span><b>Gabarit de placement</b><small>PDF — même page, le tracé où poser les carreaux</small></span></button>
-    <button onclick="exportLaser()"><span class="num">3</span><span><b>Découpe + gravure laser</b><small>SVG — contour (rouge = découpe) et emplacements numérotés (noir = gravure)</small></span></button>
+    <button onclick="exportLaser()"><span class="num">3</span><span><b>Découpe + gravure laser</b><small>SVG — contour rouge, repères bleus et flèches noires</small></span></button>
     <button onclick="ouvrePlan()"><span class="num">4</span><span><b>Plan de pose</b><small>À suivre sur la tablette pendant la pose — étapes à cocher</small></span></button>
     <button onclick="ouvreVersa()"><span class="num">5</span><span><b>Procédure VersaWorks</b><small>Réglages d'impression — étapes à cocher</small></span></button>
+    <button onclick="ouvreRubis()"><span class="num">6</span><span><b>Procédure Rubis</b><small>Préparation et découpe laser — étapes à cocher</small></span></button>
   </div>
   <div class="enc" id="encNormal"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Sur la machine : gabarit d'abord, carreaux dans les carrés en trait plein, puis impression. Les carreaux sont écartés de 10 mm et l'image déborde de 2 mm autour de chacun — un carreau légèrement décalé reste couvert jusqu'au bord.</span></div>
   <button class="btn2" id="btnRecommencer" onclick="recommencer()" style="width:100%; justify-content:center; margin-top:18px; display:flex; align-items:center; gap:9px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Retour au début</button>
@@ -405,6 +406,15 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
     <div id="versaEcran"></div>
     <div class="actions" style="justify-content:flex-end; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
       <button class="btn2" onclick="fermeVersa()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalRubis">
+  <div class="box">
+    <div id="rubisEcran"></div>
+    <div class="actions" style="justify-content:flex-end; margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
+      <button class="btn2" onclick="fermeRubis()">Fermer</button>
     </div>
   </div>
 </div>
@@ -945,18 +955,18 @@ function chiffreSVG(n,x,y,col){
   }
   return s;
 }
-/* Un seul fichier laser : contour de découpe (rouge) + gravure des emplacements
-   numérotés (noir). La machine sépare les opérations par la couleur. */
+/* Un seul fichier laser : contour extérieur (rouge), carrés et chiffres (bleu),
+   flèches (noir). Ruby associe ensuite chaque couleur à l'effet prévu. */
 function exportLaser(){
   const p=plaque(), t=state.tile, pas=t+state.joint;
   let s='<svg xmlns="http://www.w3.org/2000/svg" width="'+p+'mm" height="'+p+'mm" viewBox="0 0 '+p+' '+p+'">';
   // Découpe — contour de la plaque (rouge)
   s+='<rect x="0.1" y="0.1" width="'+(p-0.2)+'" height="'+(p-0.2)+'" rx="3" fill="none" stroke="#FF0000" stroke-width="0.2"/>';
-  // Gravure — emplacements numérotés (noir)
+  // Repères — emplacements et chiffres (bleu), flèches d'orientation (noir)
   for(let i=0;i<4;i++){
     const x=BORDURE+(i&1)*pas, y=BORDURE+(i>>1)*pas;
-    s+='<rect x="'+x+'" y="'+y+'" width="'+t+'" height="'+t+'" fill="none" stroke="#000000" stroke-width="0.3"/>';
-    s+=chiffreSVG(i+1, x+t/2-3, y+t/2-5, '#000000');
+    s+='<rect x="'+x+'" y="'+y+'" width="'+t+'" height="'+t+'" fill="none" stroke="#0000FF" stroke-width="0.3"/>';
+    s+=chiffreSVG(i+1, x+t/2-3, y+t/2-5, '#0000FF');
     s+='<polygon points="'+(x+t/2-3)+','+(y+11)+' '+(x+t/2+3)+','+(y+11)+' '+(x+t/2)+','+(y+5)+'" fill="#000000"/>';
   }
   s+='</svg>';
@@ -1027,6 +1037,44 @@ function ouvreVersa(){
   document.getElementById('modalVersa').classList.add('on');
 }
 function fermeVersa(){ document.getElementById('modalVersa').classList.remove('on'); }
+
+/* Procédure Rubis — préparation de la machine et lancement du travail laser */
+function etapesRubis(){
+  return [
+    {texte:'Place le <b>matériau autorisé</b> sur le plateau de découpe. Il doit être propre et parfaitement à plat. Si nécessaire, maintiens ses bords avec les cales prévues dans l’atelier, sans créer d’obstacle sur la trajectoire de la tête laser.'},
+    {texte:'Positionne la tête laser au-dessus du matériau, puis lance l’<b>autofocus</b> afin de régler la distance de travail. Surveille le mouvement et arrête-le immédiatement si un risque de collision apparaît.', cle:true},
+    {texte:'Vérifie une dernière fois que le matériau est stable et que la zone de travail est dégagée, puis <b>ferme le capot</b>. Le matériau à plat et une mise au point correcte conditionnent la qualité de la gravure et de la découpe.', cle:true},
+    {texte:'Dans Ruby, ouvre le fichier <b>SVG</b> généré pour l’exercice. Contrôle le visuel importé : dimensions, orientation, éléments manquants et couleurs. Optimise ensuite son placement sur le panneau. Si plusieurs pièces sont présentes, utilise le <b>nesting</b> pour limiter les chutes de matière.',
+      medias:[{s:'4a', label:'Ouvrir le fichier SVG'},{s:'4b', label:'Contrôler le visuel importé'}]},
+    {texte:'Associe chaque couleur à l’effet prévu : <b>rouge</b> pour le contour extérieur, <b>bleu</b> pour les quatre carrés et les chiffres, <b>noir</b> pour les flèches. Tu définis ainsi les opérations que le laser exécutera. Vérifie l’affectation <b>Découpe</b> ou <b>Gravure</b> de chaque couleur, puis clique sur <b>Créer la tâche</b>.',
+      media:'5'},
+    {texte:'Dans l’écran de préparation, place la tâche sur la zone réellement occupée par le panneau en bois. Repère le marqueur qui indique la <b>position actuelle de la tête laser</b>. Attribue ensuite à chaque couleur ses valeurs de puissance, de vitesse et, selon l’effet, de fréquence ou de résolution. Pour modifier un effet, clique sur sa couleur. Les valeurs affichées ont été validées pour <b>cet exercice et ce matériau</b> ; elles ne constituent pas des réglages universels.', cle:true,
+      medias:[{s:'6a', label:'Positionner la tâche sur le panneau'},{s:'6b', label:'Repérer la position de la tête laser'},{s:'6c', label:'Contrôler les paramètres de chaque effet'}]},
+    {texte:'Contrôle une dernière fois le placement, les couleurs et les paramètres, puis clique sur <b>Envoyer au laser</b>.', media:'7'},
+    {texte:'Lorsque la machine est prête et le capot fermé, démarre le travail avec le bouton <b>Démarrer</b> dans Ruby ou sur la machine. Reste à proximité et surveille la découpe pendant tout le cycle.', media:'8'}
+  ];
+}
+function ouvreRubis(){
+  const uneImage=s=>'<span class="pc-media"><span class="pc-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><small>assets/rubis/etape-'+s+'.jpg</small></span><img src="assets/rubis/etape-'+s+'.jpg" alt="Illustration de l’étape '+s+' de la procédure Rubis" onerror="this.remove()"></span>';
+  const check=etapesRubis().map((e,i)=>{
+    const n=i+1;
+    const media=e.medias
+      ? '<span class="pc-media-row">'+e.medias.map(m=>'<span class="pc-media-item">'+uneImage(m.s)+'<small class="pc-media-cap">'+m.label+'</small></span>').join('')+'</span>'
+      : (e.media ? uneImage(e.media) : '');
+    return '<label class="pc'+(e.cle?' pc-cle':'')+'"><input type="checkbox"><span class="pc-n">'+n+'</span><span class="pc-body"><span class="pc-txt">'+(e.cle?'<span class="pc-tag">Point clé</span>':'')+e.texte+'</span>'+media+'</span></label>';
+  }).join('');
+  document.getElementById('rubisEcran').innerHTML=
+    '<div style="--accent:var(--blue)">'
+    +'<h2 class="plan-titre"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3V1M12 23v-2M3 12H1M23 12h-2"/></svg>Procédure Rubis</h2>'
+    +'<p class="plan-sous">Préparer la machine, configurer la tâche et lancer la découpe</p>'
+    +'<p class="plan-hint">Coche chaque étape au fur et à mesure. Les réglages de l’exercice ont été validés pendant l’atelier.</p>'
+    +'<div class="plan-check">'+check+'</div>'
+    +'<p class="note" style="margin-top:16px">Références : <a href="https://www.troteclaser.com/en-us/helpcenter/software/ruby" target="_blank" rel="noopener">aide officielle Ruby</a> · <a href="https://www.troteclaser.com/en-us/helpcenter/software/graphics-software/material-database-laser-software-ruby" target="_blank" rel="noopener">effets et paramètres des matériaux</a>.</p>'
+    +'</div>';
+  const box=document.querySelector('#modalRubis .box'); if(box) box.scrollTop=0;
+  document.getElementById('modalRubis').classList.add('on');
+}
+function fermeRubis(){ document.getElementById('modalRubis').classList.remove('on'); }
 
 window.addEventListener('resize',rendu);
 document.getElementById('prenom').addEventListener('input',majNav);

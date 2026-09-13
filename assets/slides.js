@@ -12,6 +12,14 @@
   var nextBtn = document.getElementById('slideNext');
   var current = 0;
 
+  /* Permet à une page annexe de revenir directement à une section précise,
+     par exemple demi-journee-3.html#section-3. */
+  if (window.location.hash){
+    var cible = document.getElementById(window.location.hash.slice(1));
+    var indexCible = items.indexOf(cible);
+    if (indexCible >= 0) current = indexCible;
+  }
+
   function labelFor(item, i){
     var h2 = item.querySelector('h2');
     if (!h2) return i === 0 ? 'Intro' : 'Section ' + i;
@@ -73,4 +81,9 @@
   });
   window.addEventListener('resize', function(){ slides.scrollTo({ left: current * slides.clientWidth }); });
   maj();
+  if (current > 0){
+    window.requestAnimationFrame(function(){
+      slides.scrollTo({ left: current * slides.clientWidth, behavior: 'auto' });
+    });
+  }
 })();
