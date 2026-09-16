@@ -427,12 +427,12 @@ function etapesProcedure(){
     {texte:'Dans la barre d’outils, ouvrir <b>Paramètres</b> (icône engrenage).', img:'assets/versaworks/etape-2.jpg'},
     {texte:'Dans la section Qualité, choisir le type de support : <b>Generic</b> pour toute impression couleur ou blanc ; <b>Special Effect</b> pour l’embossage, le vernis mat ou brillant.', img:'assets/versaworks/etape-3.jpg'},
     {texte:'Toujours dans Qualité, choisir la qualité d’impression : pour le gabarit, <b>Draft</b> suffit — un simple tracé de positionnement, pas une image à restituer fidèlement.', img:'assets/versaworks/etape-4.jpg'},
-    {texte:'Imprime le <b>gabarit</b> (fichier 1) directement sur le plateau de la machine.'},
+    {texte:'Sur la machine, règle la <b>hauteur du plateau</b> avec le profil <b>Gabarit Tape</b>, puis imprime le <b>gabarit</b> (fichier 1) directement sur le plateau.'},
     {texte:'Place le support bien à l’intérieur du contour en trait plein.', img:'assets/impression-uv/etape-6.png'},
-    {texte:'Règle à nouveau la <b>hauteur du plateau</b> directement sur la machine : le support a de l’épaisseur, la distance entre la tête d’impression et la surface a changé depuis le gabarit (imprimé à plat, sans rien dessus).', cle:true},
-    {texte:'Couche blanc (si besoin) : reprendre le même fichier, sélectionner Mode → <b>White</b>, puis Générer une plaque de couleur spéciale (Forme → Zone d’impression). Imprimer le blanc avant ou après la couleur selon le support.',
-      medias:[{s:'assets/versaworks/etape-5a.jpg', label:'Mode → White'},{s:'assets/versaworks/etape-5b.jpg', label:'Générer une plaque de couleur spéciale'},{s:'assets/versaworks/etape-5c.jpg', label:'Résultat attendu'}]},
+    {texte:'Règle à nouveau la <b>hauteur du plateau</b> directement sur la machine avec le profil <b>Carrelage 15 cm</b> : le support a de l’épaisseur et la distance entre la tête d’impression et sa surface a changé depuis l’impression du gabarit.', cle:true},
     {texte:'Impression couleur : sélectionner Mode → Couleur (CMYK/Or/Re) : <b>12 passes</b> pour la meilleure qualité, <b>10 passes</b> pour aller plus vite. Qualité d’impression : Standard.', img:'assets/versaworks/etape-6.jpg'},
+    {texte:'Si tu as besoin d’une <b>sous-couche blanche</b>, sélectionne le mode multicouche adapté : <b>White → CMYK/Or/Re 12p</b> pour imprimer le blanc avant la couleur, ou <b>CMYK/Or/Re → White 12p</b> pour imprimer le blanc après la couleur. Clique ensuite sur <b>Générer une plaque de couleur spéciale</b>, puis choisis Forme → <b>Zone d’impression</b>. L’ordre dépend du support et du côté depuis lequel le visuel sera regardé.', cle:true,
+      medias:[{s:'assets/versaworks/etape-5a.jpg', label:'Choisir le mode avec blanc'},{s:'assets/versaworks/etape-5b.jpg', label:'Générer une plaque de couleur spéciale'},{s:'assets/versaworks/etape-5c.jpg', label:'Résultat attendu'}]},
     {texte:'Valider, puis cliquer sur <b>Imprimer</b>.', img:'assets/versaworks/etape-7.jpg'}
   ];
 }
