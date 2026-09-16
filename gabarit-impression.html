@@ -226,7 +226,7 @@ input[type=range]{flex:1; accent-color:var(--mauve); height:34px;}
 const K = 72/25.4;      // pt par mm (PDF)
 const DPI = 300;        // résolution d'export
 const DEBORD = 2;       // débord d'impression (mm)
-const MARGE = 5;        // marge de page (mm)
+const MARGE = DEBORD;   // la page s'arrête au débord : aucune bande blanche extérieure
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 const state = {w:100, h:100, zoom:1, ox:.5, oy:.5, img:null};
