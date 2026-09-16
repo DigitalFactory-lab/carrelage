@@ -358,7 +358,7 @@ function jpegBin(cv){
   for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
   return u;
 }
-function ecrisPDF(pageMm, content, images, pageHmm){
+function ecrisPDF(pageMm, content, images, pageHmm, boxes){
   images = images||[];
   const pW=pageMm*K, pH=(pageHmm||pageMm)*K;
   const parts=[], off=[]; let pos=0;
@@ -376,7 +376,11 @@ function ecrisPDF(pageMm, content, images, pageHmm){
   obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
   let xo='';
   for(let i=0;i<nImg;i++) xo+='/Im'+i+' '+(6+i)+' 0 R ';
-  obj(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pW.toFixed(3)+' '+pH.toFixed(3)+'] '
+  const pdfBox=box=>'['+box.map(mm=>(mm*K).toFixed(3)).join(' ')+']';
+  let pageBoxes='';
+  if(boxes&&boxes.trim) pageBoxes+=' /TrimBox '+pdfBox(boxes.trim);
+  if(boxes&&boxes.bleed) pageBoxes+=' /BleedBox '+pdfBox(boxes.bleed);
+  obj(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pW.toFixed(3)+' '+pH.toFixed(3)+']'+pageBoxes+' '
     +'/Resources << /Font << /F1 5 0 R >> '+(nImg?'/XObject << '+xo+'>> ':'')+'>> /Contents 4 0 R >>');
   obj(4,'<< /Length '+content.length+' >>\nstream\n'+content+'endstream');
   obj(5,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
@@ -409,7 +413,11 @@ function exportImpression(){
   const x=(MARGE-DEBORD)*K, y=pHpt-(MARGE-DEBORD)*K-totalH*K;
   const c='q '+(totalW*K).toFixed(3)+' 0 0 '+(totalH*K).toFixed(3)+' '
     +x.toFixed(3)+' '+y.toFixed(3)+' cm /Im0 Do Q\n';
-  dl(URL.createObjectURL(ecrisPDF(pageW, c, imgs, pageH)), 'impression_'+state.w+'x'+state.h+'mm.pdf');
+  const boxes={
+    trim:[MARGE, MARGE, MARGE+state.w, MARGE+state.h],
+    bleed:[MARGE-DEBORD, MARGE-DEBORD, MARGE+state.w+DEBORD, MARGE+state.h+DEBORD]
+  };
+  dl(URL.createObjectURL(ecrisPDF(pageW, c, imgs, pageH, boxes)), 'impression_'+state.w+'x'+state.h+'mm.pdf');
 }
 function exportGabarit(){
   const pageW=state.w+2*MARGE, pageH=state.h+2*MARGE, pHpt=pageH*K;
