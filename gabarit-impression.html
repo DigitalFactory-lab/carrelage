@@ -255,20 +255,30 @@ function chargeImage(input){
 function cropRect(){
   const img=state.img;
   if(!img||!img.width) return null;
-  const ratio=state.w/state.h;
-  const baseW = img.width/img.height>ratio ? img.height*ratio : img.width;
-  const baseH = baseW/ratio;
-  const w=baseW/state.zoom, h=baseH/state.zoom;
-  const cx=clamp(state.ox*img.width, w/2, img.width-w/2);
-  const cy=clamp(state.oy*img.height, h/2, img.height-h/2);
+  /*
+    Le cadrage correspond au format fini du support. On réserve aussi, dans
+    l'image source, les 2 mm nécessaires tout autour. Sans cette réserve,
+    l'export tenterait de lire hors de la photo et le débord deviendrait blanc.
+  */
+  const baseScale=Math.min(
+    img.width/(state.w+2*DEBORD),
+    img.height/(state.h+2*DEBORD)
+  );
+  const s=baseScale/state.zoom;
+  const w=state.w*s, h=state.h*s;
+  const pad=DEBORD*s;
+  const cx=clamp(state.ox*img.width, w/2+pad, img.width-w/2-pad);
+  const cy=clamp(state.oy*img.height, h/2+pad, img.height-h/2-pad);
   return {x:cx-w/2, y:cy-h/2, w, h};
 }
 function effDpi(){ const c=cropRect(); return c ? c.w/state.w*25.4 : 0; }
 function zoomMax(){
   const img=state.img; if(!img||!img.width) return 2;
-  const ratio=state.w/state.h;
-  const baseW = img.width/img.height>ratio ? img.height*ratio : img.width;
-  return clamp((baseW/state.w*25.4)/150, 1.01, 3);
+  const baseScale=Math.min(
+    img.width/(state.w+2*DEBORD),
+    img.height/(state.h+2*DEBORD)
+  );
+  return clamp((baseScale*25.4)/150, 1.01, 3);
 }
 function larg(el){ return Math.min(680, (el.parentElement.clientWidth||640)-2); }
 
