@@ -9,49 +9,39 @@
 <style>
   .souligne{color:var(--mauve-dark); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.05em; margin:0 0 12px;}
   .swatch{display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:7px; vertical-align:-1px; flex:none;}
-  .metiers-trigger{position:relative; display:flex; align-items:center; gap:16px; width:min(100%,680px); margin:24px 0 30px;
-    padding:18px 58px 18px 20px; border:0; border-radius:18px; overflow:hidden; cursor:pointer; text-align:left;
-    color:#fff; background:linear-gradient(125deg,#5B41B0 0%,#8D3EB5 58%,#C21C7B 100%);
-    box-shadow:0 12px 28px rgba(91,65,176,.24); font:inherit; transition:transform .18s ease,box-shadow .18s ease;}
-  .metiers-trigger:hover{transform:translateY(-3px) rotate(-.25deg); box-shadow:0 17px 34px rgba(91,65,176,.3);}
-  .metiers-trigger:focus-visible{outline:3px solid #F4C542; outline-offset:3px;}
+  .metiers-trigger{position:relative; display:flex; align-items:center; gap:16px; width:min(100%,680px); margin:24px 0 34px;
+    padding:18px 58px 18px 20px; border:1px solid var(--ink); border-radius:7px 28px 7px 7px; overflow:hidden;
+    cursor:pointer; text-align:left; color:#fff; background:var(--ink); box-shadow:10px 10px 0 var(--accent);
+    font:inherit; transition:transform .2s ease,box-shadow .2s ease;}
+  .metiers-trigger:hover{transform:translate(-2px,-2px); box-shadow:12px 12px 0 var(--accent);}
+  .metiers-trigger:focus-visible{outline:3px solid var(--accent); outline-offset:4px;}
   .metiers-trigger::after{content:"+"; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:30px; height:30px;
-    display:grid; place-items:center; border-radius:50%; color:#5B41B0; background:#F4C542; font-size:23px; font-weight:800;}
-  .metiers-trigger-icon{width:48px; height:48px; padding:11px; flex:none; border-radius:14px; color:#F4C542; background:rgba(255,255,255,.13);}
+    display:grid; place-items:center; border-radius:50%; color:var(--ink); background:var(--accent); font-size:23px; font-weight:800;}
+  .metiers-trigger-icon{width:48px; height:48px; padding:11px; flex:none; border-radius:5px 16px 5px 5px; color:var(--ink); background:var(--accent);}
   .metiers-trigger-text{display:block; min-width:0;}
-  .metiers-trigger-kicker{display:block; margin-bottom:2px; color:#F8E7A0; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.11em;}
-  .metiers-trigger-title{display:block; font-size:18px; font-weight:800; line-height:1.25;}
+  .metiers-trigger-kicker{display:block; margin-bottom:2px; color:var(--accent); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.11em;}
+  .metiers-trigger-title{display:block; font-family:"Space Grotesk",sans-serif; font-size:18px; font-weight:700; line-height:1.25;}
   .metiers-trigger-sub{display:block; margin-top:3px; color:rgba(255,255,255,.82); font-size:13px; line-height:1.4;}
-  .metiers-modal{position:fixed; inset:0; z-index:120; display:flex; align-items:center; justify-content:center; padding:22px;
-    background:rgba(27,26,43,.72); backdrop-filter:blur(6px);}
-  .metiers-modal[hidden]{display:none;}
-  .metiers-panel{position:relative; width:min(920px,100%); max-height:90vh; overflow:auto; border-radius:22px; background:#fff;
-    box-shadow:0 26px 70px rgba(20,16,46,.38);}
-  .metiers-head{position:relative; padding:30px 76px 27px 30px; color:#fff;
-    background:linear-gradient(125deg,#4B349A 0%,#7150C7 52%,#C21C7B 100%);}
-  .metiers-head .souligne{color:#F8E7A0; margin-bottom:7px;}
-  .metiers-head h2{margin:0; color:#fff; font-size:clamp(25px,4vw,38px); line-height:1.08;}
-  .metiers-head p{margin:9px 0 0; max-width:680px; color:rgba(255,255,255,.84); font-size:14px;}
+  .metiers-modal{z-index:120;}
+  body.plein-ecran .metiers-modal .metiers-panel{width:min(920px,100%); max-width:920px; padding:0; overflow:auto; background:var(--paper);}
+  .metiers-head{position:relative; padding:30px 76px 27px 30px; color:#fff; background:var(--ink); border-bottom:7px solid var(--accent);}
+  body.jour-3 .metiers-head .souligne{color:var(--accent); margin-bottom:7px;}
+  body.plein-ecran .metiers-modal .metiers-head h2{margin:0; color:#fff; font-size:clamp(25px,4vw,38px); line-height:1.08; letter-spacing:-.04em;}
+  body.plein-ecran .metiers-modal .metiers-head p{margin:9px 0 0; max-width:680px; color:rgba(255,255,255,.74); font-size:14px; line-height:1.55;}
   .metiers-close{position:absolute; top:18px; right:18px; width:42px; height:42px; display:grid; place-items:center; border:0;
-    border-radius:50%; cursor:pointer; color:#fff; background:rgba(255,255,255,.15); font-size:28px; line-height:1;}
-  .metiers-close:hover{background:rgba(255,255,255,.26);}
+    border-radius:50%; cursor:pointer; color:var(--ink); background:var(--accent); font-size:28px; line-height:1;}
+  .metiers-close:hover{background:#fff;}
   .metiers-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:22px;}
-  .metiers-card{position:relative; padding:20px 20px 18px; border:1px solid #E7E6EF; border-radius:16px; overflow:hidden; background:#fff;}
-  .metiers-card::before{content:""; position:absolute; inset:0 auto 0 0; width:5px; background:var(--accent);}
-  .metiers-card:nth-child(1){--accent:#C21C7B; --soft:#FBE6F1;}
-  .metiers-card:nth-child(2){--accent:#5B41B0; --soft:#F2EEFB;}
-  .metiers-card:nth-child(3){--accent:#D97706; --soft:#FFF3D6;}
-  .metiers-card:nth-child(4){--accent:#16806A; --soft:#E6F6F1;}
-  .metiers-card-title{display:flex; align-items:center; gap:11px; margin:0 0 12px; font-size:17px; line-height:1.25;}
-  .metiers-card-icon{width:36px; height:36px; padding:8px; flex:none; border-radius:10px; color:var(--accent); background:var(--soft);}
+  .metiers-card{position:relative; padding:20px 20px 18px; border:1px solid var(--border); border-radius:5px 24px 5px 5px; overflow:hidden; background:#fff;}
+  .metiers-card::before{content:""; position:absolute; inset:0 auto 0 0; width:6px; background:var(--accent);}
+  body.plein-ecran .metiers-modal .metiers-card-title{display:flex; align-items:center; gap:11px; margin:0 0 12px; font-size:17px; line-height:1.25; letter-spacing:-.02em;}
+  .metiers-card-icon{width:36px; height:36px; padding:8px; flex:none; border-radius:4px 12px 4px 4px; color:var(--ink); background:var(--accent);}
   .metiers-card ul{margin:0; padding-left:19px; color:#4E4C62; font-size:14px; line-height:1.55;}
   .metiers-card li+li{margin-top:7px;}
   @media(max-width:680px){
     .metiers-trigger{padding:16px 52px 16px 16px; gap:12px;}
     .metiers-trigger-icon{width:42px; height:42px; padding:9px;}
     .metiers-trigger-title{font-size:16px;}
-    .metiers-modal{padding:10px; align-items:flex-end;}
-    .metiers-panel{max-height:94vh; border-radius:20px 20px 0 0;}
     .metiers-head{padding:25px 66px 22px 20px;}
     .metiers-grid{grid-template-columns:1fr; padding:14px; gap:12px;}
   }
@@ -238,8 +228,8 @@
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
 </div>
 
-<div class="metiers-modal" id="metiersModal" role="dialog" aria-modal="true" aria-labelledby="metiersTitle" hidden onclick="fermeMetiers(event)">
-  <div class="metiers-panel" onclick="event.stopPropagation()">
+<div class="modal metiers-modal" id="metiersModal" role="dialog" aria-modal="true" aria-labelledby="metiersTitle" aria-hidden="true" onclick="fermeMetiers(event)">
+  <div class="box metiers-panel" onclick="event.stopPropagation()">
     <div class="metiers-head">
       <p class="souligne">Du fichier au chantier</p>
       <h2 id="metiersTitle">Des applications concrètes pour les métiers</h2>
@@ -289,13 +279,16 @@ var metiersDeclencheur=null;
 function ouvreMetiers(){
   metiersDeclencheur=document.activeElement;
   var modal=document.getElementById('metiersModal');
-  modal.hidden=false;
+  modal.classList.add('on');
+  modal.setAttribute('aria-hidden','false');
   document.body.style.overflow='hidden';
   modal.querySelector('.metiers-close').focus();
 }
 function fermeMetiers(e){
   if(e&&e.target!==document.getElementById('metiersModal')) return;
-  document.getElementById('metiersModal').hidden=true;
+  var modal=document.getElementById('metiersModal');
+  modal.classList.remove('on');
+  modal.setAttribute('aria-hidden','true');
   document.body.style.overflow='';
   if(metiersDeclencheur) metiersDeclencheur.focus();
 }
@@ -310,7 +303,7 @@ document.querySelectorAll('.zoomable').forEach(function(im){
 document.addEventListener('keydown', function(e){
   if (e.key === 'Escape'){
     fermeZoom();
-    if(!document.getElementById('metiersModal').hidden) fermeMetiers();
+    if(document.getElementById('metiersModal').classList.contains('on')) fermeMetiers();
   }
 });
 </script>
