@@ -9,6 +9,52 @@
 <style>
   .souligne{color:var(--mauve-dark); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.05em; margin:0 0 12px;}
   .swatch{display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:7px; vertical-align:-1px; flex:none;}
+  .metiers-trigger{position:relative; display:flex; align-items:center; gap:16px; width:min(100%,680px); margin:24px 0 30px;
+    padding:18px 58px 18px 20px; border:0; border-radius:18px; overflow:hidden; cursor:pointer; text-align:left;
+    color:#fff; background:linear-gradient(125deg,#5B41B0 0%,#8D3EB5 58%,#C21C7B 100%);
+    box-shadow:0 12px 28px rgba(91,65,176,.24); font:inherit; transition:transform .18s ease,box-shadow .18s ease;}
+  .metiers-trigger:hover{transform:translateY(-3px) rotate(-.25deg); box-shadow:0 17px 34px rgba(91,65,176,.3);}
+  .metiers-trigger:focus-visible{outline:3px solid #F4C542; outline-offset:3px;}
+  .metiers-trigger::after{content:"+"; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:30px; height:30px;
+    display:grid; place-items:center; border-radius:50%; color:#5B41B0; background:#F4C542; font-size:23px; font-weight:800;}
+  .metiers-trigger-icon{width:48px; height:48px; padding:11px; flex:none; border-radius:14px; color:#F4C542; background:rgba(255,255,255,.13);}
+  .metiers-trigger-text{display:block; min-width:0;}
+  .metiers-trigger-kicker{display:block; margin-bottom:2px; color:#F8E7A0; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.11em;}
+  .metiers-trigger-title{display:block; font-size:18px; font-weight:800; line-height:1.25;}
+  .metiers-trigger-sub{display:block; margin-top:3px; color:rgba(255,255,255,.82); font-size:13px; line-height:1.4;}
+  .metiers-modal{position:fixed; inset:0; z-index:120; display:flex; align-items:center; justify-content:center; padding:22px;
+    background:rgba(27,26,43,.72); backdrop-filter:blur(6px);}
+  .metiers-modal[hidden]{display:none;}
+  .metiers-panel{position:relative; width:min(920px,100%); max-height:90vh; overflow:auto; border-radius:22px; background:#fff;
+    box-shadow:0 26px 70px rgba(20,16,46,.38);}
+  .metiers-head{position:relative; padding:30px 76px 27px 30px; color:#fff;
+    background:linear-gradient(125deg,#4B349A 0%,#7150C7 52%,#C21C7B 100%);}
+  .metiers-head .souligne{color:#F8E7A0; margin-bottom:7px;}
+  .metiers-head h2{margin:0; color:#fff; font-size:clamp(25px,4vw,38px); line-height:1.08;}
+  .metiers-head p{margin:9px 0 0; max-width:680px; color:rgba(255,255,255,.84); font-size:14px;}
+  .metiers-close{position:absolute; top:18px; right:18px; width:42px; height:42px; display:grid; place-items:center; border:0;
+    border-radius:50%; cursor:pointer; color:#fff; background:rgba(255,255,255,.15); font-size:28px; line-height:1;}
+  .metiers-close:hover{background:rgba(255,255,255,.26);}
+  .metiers-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:22px;}
+  .metiers-card{position:relative; padding:20px 20px 18px; border:1px solid #E7E6EF; border-radius:16px; overflow:hidden; background:#fff;}
+  .metiers-card::before{content:""; position:absolute; inset:0 auto 0 0; width:5px; background:var(--accent);}
+  .metiers-card:nth-child(1){--accent:#C21C7B; --soft:#FBE6F1;}
+  .metiers-card:nth-child(2){--accent:#5B41B0; --soft:#F2EEFB;}
+  .metiers-card:nth-child(3){--accent:#D97706; --soft:#FFF3D6;}
+  .metiers-card:nth-child(4){--accent:#16806A; --soft:#E6F6F1;}
+  .metiers-card-title{display:flex; align-items:center; gap:11px; margin:0 0 12px; font-size:17px; line-height:1.25;}
+  .metiers-card-icon{width:36px; height:36px; padding:8px; flex:none; border-radius:10px; color:var(--accent); background:var(--soft);}
+  .metiers-card ul{margin:0; padding-left:19px; color:#4E4C62; font-size:14px; line-height:1.55;}
+  .metiers-card li+li{margin-top:7px;}
+  @media(max-width:680px){
+    .metiers-trigger{padding:16px 52px 16px 16px; gap:12px;}
+    .metiers-trigger-icon{width:42px; height:42px; padding:9px;}
+    .metiers-trigger-title{font-size:16px;}
+    .metiers-modal{padding:10px; align-items:flex-end;}
+    .metiers-panel{max-height:94vh; border-radius:20px 20px 0 0;}
+    .metiers-head{padding:25px 66px 22px 20px;}
+    .metiers-grid{grid-template-columns:1fr; padding:14px; gap:12px;}
+  }
 </style>
 </head>
 <body class="plein-ecran jour-3">
@@ -121,6 +167,15 @@
     <p class="souligne">Comment le laser fabrique ta base</p>
     <p>Le laser suit un tracé défini dans un fichier. Il chauffe le matériau jusqu'à le vaporiser localement, exactement là où passe la ligne.</p>
 
+    <button class="metiers-trigger" type="button" onclick="ouvreMetiers()" aria-haspopup="dialog" aria-controls="metiersModal">
+      <svg class="metiers-trigger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-4v17"/><path d="M12 10l7-3v14"/><path d="M8 11h1M8 15h1M15 11h1M15 15h1"/></svg>
+      <span class="metiers-trigger-text">
+        <span class="metiers-trigger-kicker">À découvrir</span>
+        <span class="metiers-trigger-title">Et dans les métiers de la construction&nbsp;?</span>
+        <span class="metiers-trigger-sub">Signalétique, gabarits, décoration, isolation… découvre les applications.</span>
+      </span>
+    </button>
+
     <h3>La couleur dit quoi faire</h3>
     <p>La machine ne devine rien : elle exécute l'action associée à chaque couleur. Sur ce type de machine, la convention est généralement celle-ci — mais ce n'est pas une règle universelle. Selon le logiciel ou l'atelier, les couleurs peuvent être associées à d'autres actions. C'est toujours à vérifier avant de lancer.</p>
     <ul>
@@ -183,9 +238,67 @@
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
 </div>
 
+<div class="metiers-modal" id="metiersModal" role="dialog" aria-modal="true" aria-labelledby="metiersTitle" hidden onclick="fermeMetiers(event)">
+  <div class="metiers-panel" onclick="event.stopPropagation()">
+    <div class="metiers-head">
+      <p class="souligne">Du fichier au chantier</p>
+      <h2 id="metiersTitle">Des applications concrètes pour les métiers</h2>
+      <p>La découpe et la gravure laser permettent de produire rapidement des repères, des gabarits et des éléments adaptés à de nombreux corps de métier.</p>
+      <button class="metiers-close" type="button" onclick="fermeMetiers()" aria-label="Fermer">&times;</button>
+    </div>
+    <div class="metiers-grid">
+      <article class="metiers-card">
+        <h3 class="metiers-card-title"><svg class="metiers-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 2.9 1.8 17a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 2.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>Signalétique et identification de chantier</h3>
+        <ul>
+          <li>Panneaux de sécurité et pictogrammes normalisés : EPI, dangers et risques.</li>
+          <li>Marquage et étiquetage d’éléments préfabriqués pour assurer leur traçabilité.</li>
+          <li>Plaques d’identification des réseaux : électricité, plomberie et gaz.</li>
+        </ul>
+      </article>
+      <article class="metiers-card">
+        <h3 class="metiers-card-title"><svg class="metiers-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5-5L7.4 3.6l3 3 2.3-2.3a4 4 0 0 0 2 2Z"/><path d="m10.4 6.6-8.7 8.7a2.1 2.1 0 0 0 3 3l8.7-8.7"/><path d="m15 13 6 6M17 11l-6 6"/></svg>Gabarits et outils d’aide au geste métier</h3>
+        <ul>
+          <li>Gabarits de perçage ou d’assemblage pour la menuiserie et la métallerie.</li>
+          <li>Patrons de calepinage, comme dans l’outil carrelage, transposables à la pose de dalles ou à l’agencement de panneaux.</li>
+          <li>Gabarits pour réaliser des joints, des chanfreins ou des angles complexes.</li>
+        </ul>
+      </article>
+      <article class="metiers-card">
+        <h3 class="metiers-card-title"><svg class="metiers-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7v10l8 4 8-4V7Z"/><path d="m4 7 8 4 8-4M12 11v10"/><path d="m8 5 8 4"/></svg>Finitions et décoration</h3>
+        <ul>
+          <li>Découpe de panneaux décoratifs en bois, acrylique ou MDF pour l’agencement intérieur.</li>
+          <li>Gravure de finitions personnalisées sur des portes, du mobilier intégré ou des claustras.</li>
+          <li>Création de motifs perforés pour la ventilation ou l’esthétique : façades et brise-soleil.</li>
+        </ul>
+      </article>
+      <article class="metiers-card">
+        <h3 class="metiers-card-title"><svg class="metiers-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3z"/><path d="M3 10h18M7 6v4M12 10v4M17 14v4"/></svg>Isolation et étanchéité</h3>
+        <ul>
+          <li>Découpe précise de joints d’étanchéité, de mousses et de membranes.</li>
+          <li>Création de gabarits pour les passages de gaines dans l’isolant.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</div>
+
 <script>
 /* Agrandissement des photos de la découpe laser (Section 4) */
 function fermeZoom(){ document.getElementById('lightbox').classList.remove('on'); }
+var metiersDeclencheur=null;
+function ouvreMetiers(){
+  metiersDeclencheur=document.activeElement;
+  var modal=document.getElementById('metiersModal');
+  modal.hidden=false;
+  document.body.style.overflow='hidden';
+  modal.querySelector('.metiers-close').focus();
+}
+function fermeMetiers(e){
+  if(e&&e.target!==document.getElementById('metiersModal')) return;
+  document.getElementById('metiersModal').hidden=true;
+  document.body.style.overflow='';
+  if(metiersDeclencheur) metiersDeclencheur.focus();
+}
 document.querySelectorAll('.zoomable').forEach(function(im){
   im.addEventListener('click', function(){
     var grand = document.getElementById('lightboxImg');
@@ -195,7 +308,10 @@ document.querySelectorAll('.zoomable').forEach(function(im){
   });
 });
 document.addEventListener('keydown', function(e){
-  if (e.key === 'Escape') fermeZoom();
+  if (e.key === 'Escape'){
+    fermeZoom();
+    if(!document.getElementById('metiersModal').hidden) fermeMetiers();
+  }
 });
 </script>
 <script src="assets/slides.js"></script>
